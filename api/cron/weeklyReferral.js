@@ -12,7 +12,7 @@
 // WEEKLY_REFERRAL_MIN_COUNT referrals this week qualify, top
 // WEEKLY_REFERRAL_MAX_WINNERS of those get saved as winners — could be
 // fewer than that (even 0) if not enough people crossed the threshold. NO
-// automatic WTC payout — winners are saved to `weeklyReferralReports` for
+// automatic VYRO COIN payout — winners are saved to `weeklyReferralReports` for
 // the admin to review and pay manually (via 📜 Weekly Report in bot.js).
 //
 // Vercel signs cron invocations with `Authorization: Bearer ${CRON_SECRET}`
