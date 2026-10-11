@@ -1,0 +1,13 @@
+{
+  "name": "newtube-season2",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup-db": "node models/schema.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0",
+    "@vercel/functions": "^3.9.3"
+  }
+}
