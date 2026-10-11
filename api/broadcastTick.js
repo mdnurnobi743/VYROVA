@@ -55,16 +55,16 @@ const REMINDER_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours
 const REMINDER_CAPTIONS = [
     `🎬 <b>Daily Complete Ads Earn 0.1$!</b>\n\n` +
     `Don't miss out on today's earning — your daily rewards are open right now and they reset at midnight!\n\n` +
-    `1️⃣ First, complete your <b>Tasks</b> ✅ — every task pays WTC straight to your balance.\n` +
-    `2️⃣ Then <b>Watch Videos</b> ▶️ — the longer you watch, the more WTC piles up in your lootbox.\n` +
+    `1️⃣ First, complete your <b>Tasks</b> ✅ — every task pays VYRO COIN straight to your balance.\n` +
+    `2️⃣ Then <b>Watch Videos</b> ▶️ — the longer you watch, the more VYRO COIN piles up in your lootbox.\n` +
     `3️⃣ Finally, <b>watch your daily ads</b> 📺 and claim your reward.\n\n` +
     `💡 Complete all of it every day and your balance keeps growing — small steps, real money.\n\n` +
     `👇 Open the App now and get started:`,
 
-    `💰 <b>Your WTC is waiting for you!</b>\n\n` +
+    `💰 <b>Your VYRO COIN is waiting for you!</b>\n\n` +
     `Your balance doesn't grow while the app is closed — but it grows fast when you're in!\n\n` +
     `▶️ Watch videos and fill your lootbox\n` +
-    `✅ Finish tasks for instant WTC\n` +
+    `✅ Finish tasks for instant VYRO COIN\n` +
     `🎡 Spin the wheel for bonus rewards\n` +
     `📺 Watch ads to unlock extra earnings\n\n` +
     `Every minute you spend today brings you closer to your next withdrawal. Why wait?\n\n` +
@@ -77,10 +77,10 @@ const REMINDER_CAPTIONS = [
     `📺 Watch your daily ads\n` +
     `🎬 Collect your video lootbox\n\n` +
     `It takes just a few minutes, and the reward is worth it. Protect your streak today!\n\n` +
-    `👇 Open NEWTUBE now:`,
+    `👇 Open VYROVA now:`,
 
     `🎡 <b>Free spins are ready!</b>\n\n` +
-    `The wheel is waiting — every spin can drop bonus WTC straight into your balance.\n\n` +
+    `The wheel is waiting — every spin can drop bonus VYRO COIN straight into your balance.\n\n` +
     `Here's your quick plan for today:\n` +
     `1️⃣ Spin the wheel 🎡\n` +
     `2️⃣ Complete your tasks ✅\n` +
@@ -90,7 +90,7 @@ const REMINDER_CAPTIONS = [
 
     `👥 <b>Invite friends, earn more!</b>\n\n` +
     `Did you know your friends can make your earnings grow too?\n\n` +
-    `🎁 You get WTC rewards at every step your friend completes\n` +
+    `🎁 You get VYRO COIN rewards at every step your friend completes\n` +
     `✅ A friend who finishes all the steps becomes a <b>Valid Referral</b>\n` +
     `💸 Valid referrals unlock bigger withdrawals for you\n` +
     `🤝 And you earn a commission every time they withdraw\n\n` +
@@ -143,7 +143,7 @@ export default async function handler(req, res) {
 
     const newJob = await createBroadcastJob({
         text: REMINDER_CAPTIONS[captionIndex],
-        buttonText: '🚀 Open NEWTUBE',
+        buttonText: '🚀 Open VYROVA',
         buttonUrl: MINI_APP_URL,
         photoFileId: null,
         createdBy: 'auto-cron-12h',
