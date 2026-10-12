@@ -129,11 +129,11 @@
     }
 
     /* ── micro-interactions ──────────────────────────────────────────────── */
-    var RIPPLE_SEL = '.btn, .nav-item, .row-card, .home-row, .jg-link-card';
+    var RIPPLE_SEL = '.btn, .nav-item, .row-card, .home-row, .jg-link-card, .pf-row, .pf-cta';
     function onPointerDown(e) {
         var t = e.target.closest ? e.target.closest(RIPPLE_SEL + ', .act, .icon-btn, .lvl, .subnav-btn') : null;
         if (!t) return;
-        if (t.matches('.btn, .nav-item, .row-card, .home-row, .subnav-btn, .act, .icon-btn')) haptic('light');
+        if (t.matches('.btn, .nav-item, .row-card, .home-row, .subnav-btn, .act, .icon-btn, .pf-row, .pf-cta')) haptic('light');
         if (reduce || !t.matches(RIPPLE_SEL) || t.disabled) return;
         var r = t.getBoundingClientRect();
         var d = Math.max(r.width, r.height) * 2;
