@@ -628,14 +628,4 @@ input[type="checkbox"] { accent-color: var(--forest-600); width: 18px; height: 1
 @media (prefers-reduced-motion: reduce) {
     .cloud, .mote, .atm-beam, .coin3d-body, .coin3d-float, .coin-aura, .coin-leaf, .vy-hero::before, .refer-hero::before, .row-cta::after, .nav-coin-body::after, .nav-coin-halo, .brand-mark::after { animation: none !important; }
     .mote { display: none; }
-
-/* leaf sway: animate `transform` (compositor-friendly) instead of the separate translate/rotate properties */
-.coin-leaf.l1 { --r: 38deg; transform: rotate(var(--r)); }
-.coin-leaf.l2 { --r: -120deg; transform: rotate(var(--r)); }
-.coin-leaf.l3 { --r: 150deg; transform: rotate(var(--r)); }
-@keyframes leaf-sway { 0%, 100% { transform: translate(0, 0) rotate(var(--r)); } 50% { transform: translate(2px, -5px) rotate(calc(var(--r) + 7deg)); } }
-
-/* perf: cards/rows/hero sit over a smooth gradient, so their backdrop blur is visually a no-op,
-   but it costs a GPU blur per element per frame. Bottom nav, toasts and modal overlays keep theirs. */
-.card, .row-card, .home-card-list, .vy-hero { -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
