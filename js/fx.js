@@ -221,16 +221,45 @@
     // When the on-screen keyboard opens, the Telegram WebView shrinks but `vh` does not, so tall
     // sheets overflowed behind the keyboard and their lower half never painted. --ovh is the
     // real visible height; overlays and sheets size from it.
-    var vvTimer = 0;
+    // FIX (withdraw screen shaking / going white while typing an amount):
+    //  1) the keyboard animation fires many visualViewport "resize" events; applying --ovh on every
+    //     one re-laid the overlay + sheet each frame (visible shake). It is now applied once, after
+    //     the viewport has settled (trailing debounce), and only if the value really changed.
+    //  2) --ovt follows visualViewport.offsetTop so the overlay never slides off-screen on iOS.
+    //  3) the old focus handler used scrollIntoView(), which also scrolls the PAGE behind the sheet and
+    //     fought the keyboard resize (jump / blank frame). It now scrolls only the sheet's own scroller.
+    var vvTimer = 0, lastOvh = 0, lastOvt = 0;
     function setOvh() {
-        var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-        root.style.setProperty('--ovh', Math.round(h) + 'px');
+        var vv = window.visualViewport;
+        var h = Math.round((vv && vv.height) || window.innerHeight);
+        var t = Math.round((vv && vv.offsetTop) || 0);
+        if (h !== lastOvh) { lastOvh = h; root.style.setProperty('--ovh', h + 'px'); }
+        if (t !== lastOvt) { lastOvt = t; root.style.setProperty('--ovt', t + 'px'); }
     }
-    function onVv() { cancelAnimationFrame(vvTimer); vvTimer = requestAnimationFrame(setOvh); }
+    function onVv() { clearTimeout(vvTimer); vvTimer = setTimeout(setOvh, 90); }
+
+    function scrollerOf(el) {
+        var n = el.parentElement;
+        while (n && !n.classList.contains('overlay')) {
+            var oy = getComputedStyle(n).overflowY;
+            if ((oy === 'auto' || oy === 'scroll') && n.scrollHeight > n.clientHeight + 1) return n;
+            n = n.parentElement;
+        }
+        return null;
+    }
+    function revealInput(t) {
+        if (!t || !t.isConnected) return;
+        var sc = scrollerOf(t);
+        if (!sc) return;
+        var r = t.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+        if (r.top >= sr.top + 8 && r.bottom <= sr.bottom - 8) return; // already fully visible
+        sc.scrollTop += (r.top + r.height / 2) - (sr.top + sr.height / 2);
+    }
     function onFocusIn(e) {
         var t = e.target;
         if (!t || !t.matches || !t.matches('input, textarea') || !t.closest('.sheet')) return;
-        setTimeout(function () { try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (x) {} }, 320);
+        // wait for the keyboard-driven viewport change to settle, then nudge only the sheet's scroller
+        setTimeout(function () { revealInput(t); }, 380);
     }
 
     /* ── boot ────────────────────────────────────────────────────────────── */
@@ -247,7 +276,7 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         document.addEventListener('pointerdown', onPointerDown, { passive: true });
         document.addEventListener('click', onClick);
-        window.addEventListener('resize', moveNavIndicator);
+        var navRaf = 0; window.addEventListener('resize', function () { cancelAnimationFrame(navRaf); navRaf = requestAnimationFrame(moveNavIndicator); });
         window.addEventListener('orientationchange', function () { setTimeout(moveNavIndicator, 250); });
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveNavIndicator);
         // battery: freeze every loop while the Mini App is backgrounded
