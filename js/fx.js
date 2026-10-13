@@ -217,6 +217,22 @@
         return new Promise(function (r) { setTimeout(r, reduce ? 0 : 420); });
     }
 
+    /* ── keyboard-aware viewport ─────────────────────────────────────────── */
+    // When the on-screen keyboard opens, the Telegram WebView shrinks but `vh` does not, so tall
+    // sheets overflowed behind the keyboard and their lower half never painted. --ovh is the
+    // real visible height; overlays and sheets size from it.
+    var vvTimer = 0;
+    function setOvh() {
+        var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        root.style.setProperty('--ovh', Math.round(h) + 'px');
+    }
+    function onVv() { cancelAnimationFrame(vvTimer); vvTimer = requestAnimationFrame(setOvh); }
+    function onFocusIn(e) {
+        var t = e.target;
+        if (!t || !t.matches || !t.matches('input, textarea') || !t.closest('.sheet')) return;
+        setTimeout(function () { try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (x) {} }, 320);
+    }
+
     /* ── boot ────────────────────────────────────────────────────────────── */
     function boot() {
         mountAtmosphere();
@@ -224,6 +240,10 @@
         if (sc) { sc.innerHTML = '<div class="coin-aura"></div>' + coin3d({ size: 170 }); }
         splashTick(performance.now());
         refresh();
+        setOvh();
+        window.addEventListener('resize', onVv);
+        if (window.visualViewport) window.visualViewport.addEventListener('resize', onVv);
+        document.addEventListener('focusin', onFocusIn);
         window.addEventListener('scroll', onScroll, { passive: true });
         document.addEventListener('pointerdown', onPointerDown, { passive: true });
         document.addEventListener('click', onClick);
