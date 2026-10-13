@@ -15,6 +15,7 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 4) <= 2;
     var root = document.documentElement;
+    if (lowEnd) root.classList.add('lite');
 
     /* ── haptics ─────────────────────────────────────────────────────────── */
     function haptic(kind) {
@@ -91,7 +92,7 @@
             '<div class="atm-layer" data-depth="0.025"><i class="cloud c1"></i><i class="cloud c2"></i></div>' +
             '<div class="atm-layer" data-depth="0.055"><i class="cloud c6"></i><i class="cloud c3"></i></div>' +
             '<div class="atm-layer" data-depth="0.1"><i class="cloud c4"></i><i class="cloud c5"></i></div>';
-        var motes = reduce ? 0 : (lowEnd ? 5 : 11);
+        var motes = reduce ? 0 : (lowEnd ? 0 : 6);
         for (var i = 0; i < motes; i++) {
             var m = document.createElement('i');
             var dur = 20 + Math.random() * 18;
@@ -109,10 +110,16 @@
     var parallaxEls = [], sy = 0, ticking = false;
     function applyParallax() {
         ticking = false;
-        for (var i = 0; i < layers.length; i++) layers[i].el.style.transform = 'translate3d(0,' + (-sy * layers[i].d).toFixed(1) + 'px,0)';
         for (var j = 0; j < parallaxEls.length; j++) parallaxEls[j].el.style.transform = 'translate3d(0,' + (sy * parallaxEls[j].f).toFixed(1) + 'px,0)';
     }
+    // Parallax is only kept for the hero coin; the cloud layers no longer move with scroll
+    // (6 big gradient layers re-composited every frame was the main cause of scroll jank).
+    var scrollTimer = 0, scrolling = false;
     function onScroll() {
+        if (!scrolling) { scrolling = true; root.classList.add('is-scrolling'); }
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () { scrolling = false; root.classList.remove('is-scrolling'); }, 140);
+        if (!parallaxEls.length) return;
         sy = window.pageYOffset || 0;
         if (!ticking) { ticking = true; requestAnimationFrame(applyParallax); }
     }
