@@ -21,6 +21,7 @@ import { connectToDatabase } from '../lib/mongodb.js';
 import { ObjectId } from 'mongodb';
 import { tgSend } from '../lib/telegram.js';
 import { verifyTelegramInitData } from '../lib/telegramAuth.js';
+import { guard } from '../lib/guard.js';
 import {
     TASK_CREATE_PACKAGES, TASK_CREATE_ORDER_EXPIRY_MINUTES, TASK_CREATE_REWARD_PER_TASK_WTC,
 } from '../lib/constants.js';
@@ -348,6 +349,9 @@ async function handleCronCheckDeposits(req, res, db) {
 // ════════════════════════════════════════════════════════════════════
 
 export default async function handler(req, res) {
+    // 🛡️ Server Guard (3 layers) — user traffic only; the cron call has its own auth and no Telegram session
+    if (!req.query?.cron && await guard(req, res)) return;
+
     const { db } = await connectToDatabase();
 
     // ── cron: POST /api/payments?cron=checkDeposits ──
