@@ -58,6 +58,9 @@ export default async function handler(req, res) {
             ['spinLogs.createdAt (TTL 30d)', () => db.collection('spinLogs').createIndex({ createdAt: 1 }, { expireAfterSeconds: 2592000 })],
             ['spinLogs.userId+createdAt', () => db.collection('spinLogs').createIndex({ userId: 1, createdAt: -1 })],
             // Mini Bot run history: TTL 30 days
+            // 🛡️ Server Guard (lib/guard.js) — counters + temp blocks, self-cleaning
+            ['rateLimits.expireAt (TTL)', () => db.collection('rateLimits').createIndex({ expireAt: 1 }, { expireAfterSeconds: 0 })],
+            ['rateBlocks.expireAt (TTL)', () => db.collection('rateBlocks').createIndex({ expireAt: 1 }, { expireAfterSeconds: 0 })],
             ['miniBotLogs.createdAt (TTL 30d)', () => db.collection('miniBotLogs').createIndex({ createdAt: 1 }, { expireAfterSeconds: 2592000 })],
             ['miniBotLogs.userId+createdAt', () => db.collection('miniBotLogs').createIndex({ userId: 1, createdAt: -1 })],
             ['weeklyReferralReports.weekEndedAt', () => db.collection('weeklyReferralReports').createIndex({ weekEndedAt: -1 })],
