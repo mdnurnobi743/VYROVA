@@ -57,6 +57,9 @@ export default async function handler(req, res) {
             // spin history: TTL 30 days (2592000s) + lookup index for the admin user panel
             ['spinLogs.createdAt (TTL 30d)', () => db.collection('spinLogs').createIndex({ createdAt: 1 }, { expireAfterSeconds: 2592000 })],
             ['spinLogs.userId+createdAt', () => db.collection('spinLogs').createIndex({ userId: 1, createdAt: -1 })],
+            // Mini Bot run history: TTL 30 days
+            ['miniBotLogs.createdAt (TTL 30d)', () => db.collection('miniBotLogs').createIndex({ createdAt: 1 }, { expireAfterSeconds: 2592000 })],
+            ['miniBotLogs.userId+createdAt', () => db.collection('miniBotLogs').createIndex({ userId: 1, createdAt: -1 })],
             ['weeklyReferralReports.weekEndedAt', () => db.collection('weeklyReferralReports').createIndex({ weekEndedAt: -1 })],
             ['adminState.updatedAt (TTL 1h)', () => db.collection('adminState').createIndex({ updatedAt: 1 }, { expireAfterSeconds: 3600 })],
             // resumable broadcast jobs (lib/broadcastJob.js). One doc
@@ -101,4 +104,4 @@ export default async function handler(req, res) {
     } catch (err) {
         return res.status(500).json({ ok: false, error: 'server_error', message: err.message, results });
     }
-                    }
+}
