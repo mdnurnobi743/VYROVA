@@ -43,7 +43,7 @@ import { getLatestBroadcastJob, createBroadcastJob } from '../lib/broadcastJob.j
 import { processBroadcastChunk } from '../lib/broadcastProcessor.js';
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const MINI_APP_URL = 'https://t.me/NewTube12_bot/WatchTo_Earn'; // ⚠️ must match api/bot.js's MINI_APP_URL
+const MINI_APP_URL = 'https://t.me/Vyrova_bot'; // ⚠️ must match api/bot.js's MINI_APP_URL
 
 const REMINDER_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
@@ -56,14 +56,14 @@ const REMINDER_CAPTIONS = [
     `🎬 <b>Daily Complete Ads Earn 0.1$!</b>\n\n` +
     `Don't miss out on today's earning — your daily rewards are open right now and they reset at midnight!\n\n` +
     `1️⃣ First, complete your <b>Tasks</b> ✅ — every task pays VYRO COIN straight to your balance.\n` +
-    `2️⃣ Then <b>Watch Videos</b> ▶️ — the longer you watch, the more VYRO COIN piles up in your lootbox.\n` +
+    `2️⃣ Then <b>play games</b> 🎮 and <b>spin the wheel</b> 🎡 for bonus rewards.\n` +
     `3️⃣ Finally, <b>watch your daily ads</b> 📺 and claim your reward.\n\n` +
     `💡 Complete all of it every day and your balance keeps growing — small steps, real money.\n\n` +
     `👇 Open the App now and get started:`,
 
     `💰 <b>Your VYRO COIN is waiting for you!</b>\n\n` +
     `Your balance doesn't grow while the app is closed — but it grows fast when you're in!\n\n` +
-    `▶️ Watch videos and fill your lootbox\n` +
+    `🎮 Play games and earn rewards\n` +
     `✅ Finish tasks for instant VYRO COIN\n` +
     `🎡 Spin the wheel for bonus rewards\n` +
     `📺 Watch ads to unlock extra earnings\n\n` +
@@ -75,7 +75,7 @@ const REMINDER_CAPTIONS = [
     `Right now you can:\n` +
     `🔥 Claim today's streak reward\n` +
     `📺 Watch your daily ads\n` +
-    `🎬 Collect your video lootbox\n\n` +
+    `🎮 Play a game or two\n\n` +
     `It takes just a few minutes, and the reward is worth it. Protect your streak today!\n\n` +
     `👇 Open VYROVA now:`,
 
@@ -98,10 +98,10 @@ const REMINDER_CAPTIONS = [
     `👇 Open the app and copy your referral link:`,
 
     `⏰ <b>12 hours passed — time to earn again!</b>\n\n` +
-    `Your daily tasks, ads and videos are open and waiting for you. Don't let today's rewards go unclaimed!\n\n` +
+    `Your daily tasks, games and ads are open and waiting for you. Don't let today's rewards go unclaimed!\n\n` +
     `📋 Your checklist:\n` +
     `✅ Complete your tasks\n` +
-    `▶️ Watch videos & claim the lootbox\n` +
+    `🎮 Play games\n` +
     `📺 Watch your daily ads\n` +
     `🎡 Do your spins\n\n` +
     `Finish them all and you'll be ready to withdraw. Consistency is what turns small rewards into real cash. 💵\n\n` +
