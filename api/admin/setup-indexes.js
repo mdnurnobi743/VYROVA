@@ -44,6 +44,7 @@ export default async function handler(req, res) {
             ['games.isActive+createdAt', () => db.collection('games').createIndex({ isActive: 1, createdAt: -1 })],
             ['games.gameUrl', () => db.collection('games').createIndex({ gameUrl: 1 })],
             ['tasks.isApproved+category+createdAt', () => db.collection('tasks').createIndex({ isApproved: 1, category: 1, createdAt: -1 })],
+            ['dailyClaims.userId+createdAt', () => db.collection('dailyClaims').createIndex({ userId: 1, createdAt: -1 })],
             ['withdrawals.userId+createdAt', () => db.collection('withdrawals').createIndex({ userId: 1, createdAt: -1 })],
             ['withdrawals.details', () => db.collection('withdrawals').createIndex({ details: 1 })],
             ['promos.code (unique)', () => db.collection('promos').createIndex({ code: 1 }, { unique: true })],
