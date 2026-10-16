@@ -1,0 +1,2864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<!-- No-cache: Telegram's in-app WebView (and some CDN edges) can keep serving a
+stale copy of this HTML after a deploy. vercel.json sends matching real
+Cache-Control headers for the HTTP layer (html, i18n.js, css/, js/). -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="theme-color" content="#F4F1E6">
+<title>VYROVA</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<!-- VYROVA "Ivory & Sage" design system — all styling lives here -->
+<link rel="stylesheet" href="css/vyrova.css">
+</head>
+<body>
+
+<!-- Brand sprite: coin metals + the VYROVA V-mark (two leaf blades and a sprout).
+     Referenced everywhere through <use href="#vy-…"> so the logo exists exactly once. -->
+<svg id="vy-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+        <linearGradient id="vyRim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFFDF3"/><stop offset=".22" stop-color="#EADFC0"/><stop offset=".5" stop-color="#BCA56B"/><stop offset=".74" stop-color="#F6EFD6"/><stop offset="1" stop-color="#C7B077"/>
+        </linearGradient>
+        <linearGradient id="vyRimIn" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#B79F63"/><stop offset=".5" stop-color="#F3EBCF"/><stop offset="1" stop-color="#CDB77C"/>
+        </linearGradient>
+        <radialGradient id="vyFace" cx=".34" cy=".26" r=".9">
+            <stop offset="0" stop-color="#8FB09A"/><stop offset=".45" stop-color="#4D7857"/><stop offset="1" stop-color="#244433"/>
+        </radialGradient>
+        <radialGradient id="vyGloss" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="vyGradL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3C6A4B"/><stop offset="1" stop-color="#16301F"/></linearGradient>
+        <linearGradient id="vyGradR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A9C3A3"/><stop offset="1" stop-color="#5E8566"/></linearGradient>
+        <linearGradient id="vyCoinL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DCE8D5"/><stop offset="1" stop-color="#A9C3A3"/></linearGradient>
+        <linearGradient id="vyCoinR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F0E6C6"/></linearGradient>
+
+        <!-- V-mark on light surfaces (header tile, spin hub) -->
+        <symbol id="vy-v-dark" viewBox="0 0 120 120">
+            <path d="M104 20C88 20 68 50 60 104 78 92 100 62 104 20Z" fill="url(#vyGradR)"/>
+            <path d="M96 8C106 2 116 6 118 16 108 20 98 18 96 8Z" fill="url(#vyGradR)"/>
+            <path d="M16 20C32 20 52 50 60 104 42 92 20 62 16 20Z" fill="url(#vyGradL)"/>
+            <path d="M22 28C36 44 50 68 58 96" stroke="rgba(255,255,255,.35)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M98 28C84 44 70 68 62 96" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </symbol>
+        <!-- V-mark on the green coin face -->
+        <symbol id="vy-v-coin" viewBox="0 0 120 120">
+            <path d="M104 20C88 20 68 50 60 104 78 92 100 62 104 20Z" fill="url(#vyCoinR)"/>
+            <path d="M96 8C106 2 116 6 118 16 108 20 98 18 96 8Z" fill="url(#vyCoinR)"/>
+            <path d="M16 20C32 20 52 50 60 104 42 92 20 62 16 20Z" fill="url(#vyCoinL)"/>
+            <path d="M22 28C36 44 50 68 58 96" stroke="rgba(47,90,64,.35)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M98 28C84 44 70 68 62 96" stroke="rgba(138,109,43,.35)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="vy-leaf" viewBox="0 0 40 40">
+            <path d="M6 34C6 16 18 5 36 5 36 24 26 35 6 34Z" fill="currentColor"/>
+            <path d="M8 32C16 22 24 15 32 9" stroke="rgba(255,255,255,.55)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        </symbol>
+    </defs>
+</svg>
+
+<div id="splash">
+    <div id="splash-coin"></div>
+    <div class="splash-name" aria-label="VYROVA"><span style="--i:0">V</span><span style="--i:1">Y</span><span style="--i:2">R</span><span style="--i:3">O</span><span style="--i:4">V</span><span style="--i:5">A</span></div>
+    <div class="splash-tagline">TUNE IN · EARN · CASH OUT</div>
+    <div class="splash-loadbar-wrap">
+        <div class="splash-loadbar-label"><span>LOADING</span><span class="pct">0%</span></div>
+        <div class="splash-loadbar-track"><div class="splash-loadbar-fill"></div></div>
+    </div>
+</div>
+
+<canvas id="burst-canvas"></canvas>
+
+<div id="toast-host"></div>
+<div id="app-root"></div>
+<div id="modal-root"></div>
+
+<!-- 7-language translator for the mini app (see i18n.js). Same-origin, tiny; the app still works (English) if it fails to load. -->
+<script src="i18n.js"></script>
+<!-- Visual effects layer (atmosphere, 3D coin, ripples, haptics) — no logic -->
+<script src="js/fx.js"></script>
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════════
+const API_BASE = 'https://vyrova-xi.vercel.app/api';
+const MINI_APP_BASE = 'https://t.me/Vyrova_bot';
+const OFFICIAL_CHANNEL_URL = 'https://t.me/+7N5N7UhsywBlZjk1';
+const COMMUNITY_GROUP_URL = 'https://t.me/+XxnuiIa6pec1N2Zl';
+const PAYMENT_PROOF_GROUP_URL = 'https://t.me/vryrova_paymentproof'; // Payment Proof group: required to join (join-gate) + target of the Payment Channel buttons
+const WITHDRAW_METHOD_LABELS = { binance: 'Binance UID', tonkeeper: 'Tonkeeper Address' }; // mirrors lib/constants.js WITHDRAW_METHODS labels
+// Withdraw display constants: copies of lib/constants.js for instant UI text.
+// The server stays the source of truth (withdraw?action=status → withdrawRequirements).
+const WITHDRAW_ADS_REQUIRED = 10;
+const WTC_PER_USD_DISPLAY = 50000; // display only; real conversion is in api/withdraw.js
+const FREE_WITHDRAWALS_DISPLAY = 5;  // first 5 withdrawals need no valid referral (capped at $0.25 each)
+const MIN_WITHDRAW_WTC = 1500;
+// First-withdraw account age (0 = off), promised payout window, terms version.
+const WITHDRAW_MIN_ACCOUNT_AGE_HOURS_DISPLAY = 0;
+const WITHDRAW_PROCESS_MIN_HOURS_DISPLAY = 3;
+const WITHDRAW_PROCESS_MAX_HOURS_DISPLAY = 48;
+const TERMS_VERSION_DISPLAY = 1;
+const WITHDRAW_FEE_PERCENT_DISPLAY = 15;
+const WITHDRAW_SECOND_FEE_PERCENT_DISPLAY = 0;  // 0 = only one fee
+// ⚠️ NEW — Weekly Referral Contest display constants, mirror lib/constants.js exactly.
+const WEEKLY_REFERRAL_MIN_COUNT_DISPLAY = 10;   // refs needed THIS WEEK to qualify
+const WEEKLY_REFERRAL_MAX_WINNERS_DISPLAY = 10; // cap on rewarded users
+// ⚠️ NEW — Create Task (buy a user-created task with TON) display
+// constants, mirror lib/constants.js exactly. See api/payments.js (resource:'taskcreate') +
+// api/payments.js (cron=checkDeposits).
+const TASK_CREATE_REWARD_PER_TASK_WTC_DISPLAY = 10;
+const TASK_CREATE_PACKAGES_DISPLAY = { '100': 0.15, '200': 0.30, '500': 0.75, '1000': 1.5 };
+const TASK_CREATE_ORDER_EXPIRY_MIN_DISPLAY = 15;
+
+const tg = window.Telegram?.WebApp;
+if (tg) {
+    try { tg.ready(); } catch (e) {}
+    try { tg.expand(); } catch (e) {}
+    // Ivory chrome so Telegram's header / bottom bar blend into the cloud background
+    try { tg.setHeaderColor('#F4F1E6'); } catch (e) {}
+    try { tg.setBackgroundColor('#F4F1E6'); } catch (e) {}
+    try { tg.setBottomBarColor('#F4F1E6'); } catch (e) {}
+}
+
+// ⚠️ FIX — "Open in Tonkeeper" was a plain `<a href="${deepLink}">`. Inside
+// Telegram's in-app WebView, clicking a bare <a> navigates the WebView's
+// OWN top-level frame (i.e. tries to replace the Mini App itself) instead
+// of handing the URL off to the OS/Telegram-app link handler. app.tonkeeper.com
+// then internally redirects toward a `ton://` intent to hand off to the
+// Tonkeeper app — a scheme the Mini App's own WebView doesn't know how to
+// navigate to — so the WebView throws net::ERR_UNKNOWN_URL_SCHEME and is
+// left showing that error in place of the Mini App. The fix is to never let
+// the WebView navigate itself: always route external links through
+// `Telegram.WebApp.openLink()`, which Telegram intercepts and opens in the
+// system browser / native app instead of the Mini App's own frame.
+function openTonkeeperLink(url) {
+    if (!url) return;
+    if (tg?.openLink) {
+        try { tg.openLink(url, { try_instant_view: false }); return; } catch (e) {}
+    }
+    // Fallback for testing outside Telegram (plain mobile/desktop browser).
+    window.open(url, '_blank', 'noopener');
+}
+
+// ⚠️ SECURITY: USER_ID/FIRST_NAME/USERNAME here are for DISPLAY ONLY (cosmetic).
+// They are never sent to the backend as a trusted identity — every API call
+// sends the raw signed `tg.initData` string instead, and the server verifies
+// it cryptographically (see lib/telegramAuth.js) before trusting any user id.
+// This prevents anyone from forging requests with someone else's userId.
+let USER_ID = null, FIRST_NAME = 'User', USERNAME = 'N/A', PHOTO_URL = '', startParam = null;
+let TG_INIT_DATA = tg?.initData || '';
+
+function hydrateDisplayUserFields() {
+    TG_INIT_DATA = tg?.initData || ''; // re-read fresh each time — Telegram's bridge can deliver this late
+    const u = tg?.initDataUnsafe?.user;
+    if (!u || !TG_INIT_DATA) return false;
+    USER_ID = String(u.id);
+    FIRST_NAME = u.first_name || 'User';
+    USERNAME = u.username || 'N/A';
+    PHOTO_URL = (typeof u.photo_url === 'string' && /^https:\/\//.test(u.photo_url)) ? u.photo_url : ''; // Telegram profile photo (signed initData field)
+    startParam = tg?.initDataUnsafe?.start_param || null;
+    return true;
+}
+
+// ⚠️ NEW (big update) — small helpers. esc() = HTML-escape anything user-controlled
+// (Telegram names, task titles) before it goes into innerHTML; tx() = translate a
+// string from JS (native popups); avatarHtml() = Telegram photo with initial fallback.
+function esc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function tx(key, ...args) { return window.i18n ? window.i18n.t(key, ...args) : String(key).replace(/\{(\d+)\}/g, (_, n) => args[+n] ?? ''); }
+function avatarHtml(name, size) {
+    const initial = esc((name || '?').trim().charAt(0).toUpperCase() || '?');
+    const img = PHOTO_URL ? `<img src="${esc(PHOTO_URL)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+    return `<span class="tg-avatar" style="${size ? `width:${size}px; height:${size}px; font-size:${Math.round(size * 0.4)}px;` : ''}">${initial}${img}</span>`;
+}
+
+const state = { user: null, videos: [], tasks: [], leaderboard: [], activeTab: 'home', videoSession: null };
+
+// ⚠️ CHANGED — this used to hold cropped icons for the whole Home tab
+// (stats, feature cards, list rows, nav bar) — all of those were reverted to
+// coded SVG per admin request (recurring crop-alignment bugs + easier to
+// maintain). Only the join-gate icons (jgHero/jgChannel/jgCommunity/
+// jgShield) are still images — that's a separate feature, not touched by
+// this request, so left as-is.
+const DESIGN_ICONS = {
+    jgHero: 'data:image/webp;base64,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',
+    jgChannel: 'data:image/webp;base64,UklGRjgIAABXRUJQVlA4ICwIAADQJgCdASp4AF0APmEokEUkIqGXWjbEQAYEsgBfmyAtbzb/cecNdH9BwtiOoaO358xnmu+ir/AeoB0pnoAfsB6bn7c/CV+3P7Ae05QTG79YK/5ywLlsdsdyNfmPsAflv0UfpT0c/WPsFfrGiJHEdlKUvzRnsq+9Ck478V6WHtPTpW659J3N1kfXetvzCX5v2K69FGleXIo2pWZRQoRRYWXEkn5Sa3zy88ZVV4NKulg9b+MR7nBGwIPQlCiQi+kZX/f9PaOjc+3cf9Wg/Ncu7ihSr6kBkMQjnSLBsZs5uYZfJrdTX1HXrMcSz4DaWjfo7nBxg6JRaYIUKENfbxhZjhvZMxm3FpiGCRxh0GpeL/z9NpvtSFXvqSOSFYbyXCoA36CvzpUxGAL65UYfvKtRM7ccdy0Fn1bV9accXMcYYo8AAP7/CVEt0CrUSRigxnEWP6qkHLlBiunoN77c1Nx8VjFzvrq5nzPr3BsDzQvcgIZeUVEsQNSanTyiWAeIMIWK0LnmWagOEe7KlFjOE7+YsEnOCtQkG5N+p9ZPgOUbxzm5bczJ6cZyjBa63aO7KkjzBEnsXGoBFBdV1kDRbPrG+9sa8OUg/gNyd5w8BhsuBmzh1IGhMcTQC9s0WFiru3MXPA4xU2/PDzqWAeTGYL7Koz8y7aIiN6Q/EpJX4ozWv0xR+8lhqShaoZd4bUsGUNxJKaxzGq7Am9demT8GL4zxJVdtyBYbD/ds9w6Yjqvp5IYWjO/n3MOvuCtWbiHlT5+Lonpie3vKtCp2JIGTHq4Srrbn3I76jaK5DsYmAH31OinwdAcZONqt8+/bH6bGoKb2hnYF8YxCANrpGlem/PhyTYq2vJkyFgf+0Yei+R4Pr37mWKNXLYUHoYbwGcycVw3Lmd87hDpXmGR/cXJequSTgHP6dQ2UYSdi2Mo909CdMRSG6TKUIe5+HoJPRULvFRiufqdE/iC3brO7ZO7PkdsCPFgIneR0pQmxk2DnDex+aZH1OPf5ANtmoTmYO1oGgzl/O2NWr79a3xc+OqnC3/wUdbX9SrU6naghMQS4Wutjur/kYvZlRsFVvUQ9pd944mDhZ0MUA+3p+SA4s/GyOlRZlPCO8cEo3twh8qKpNXHHeSUND5/X+b3t+Ti8ITFiiDZe2b4UkDQOnOsHpX/zS3px9tAk3BB82V3HkPbJElG4SjLgIIz4jR2HZuoGVdGGPTBfo7t1RmhMFcTT7n0FPUh4tYqx+ATbYn4hVp8Z3EOSbA51ZMGmjRFtaInrXcRapWqFrScSwz9tkXqDuXQhU8LIt7qmJyRqJOrdbI47cZNFfe4zIGCPyoBkvCIkFZsLTKxORa3X57OQTtPfLdOwEgkDOWVh6YDyAZDUijeiAg6QT/Z+r0RPbjfrXHXz6P9i9AaErOsEvwZiyEziJulMob7aATBQyIaXv/yIPioTqFOZI43OtKXOHpt++0UjCZ3y7p0Z4aIeSXBeNC2LOW/KtS31d5mswUN76N0HHJ1YRHpz2xap9DoRrJjIk2p5mJmTG0dfSoXvWy4NCV20/2qf/Adkx9pEcwBYooEfEvCXrnKtYz+IsDUpVSKsv8AwOFs0jzLSQw87EE4j09NfnXqsGYl/ihsfhlkuXtlPNrRqPe3+LeLsUySfwYq4HJbpMj37RWKT/swmTsbn3Jey43OcC16QBrEa0Fs1LZ0q/3wY4qNOf4D8vUFoqz03a2rE++Oft2m4uqyJ2hTWk9UvFxNNXZTnp5ycRAhQCW3mu2xXeV5PJxzHGEsw2Gv3kajHXWE5VaXIZngDEF4VMFpglKur98ogqaZ/vIodE5IV8KKXGV2gZtAlbV8OMnEPUzyZvRGMjhRKiTAzhQ0/t29GZj1FSg9XeZ2OI+iyhIOgzAvFYg+lB8vZ4Ai7iN7t6Va3nILdcjmuqu+MOl56tP/i5uxdaYQZ7DXnHnhsuUCzHHxgKhTVjgAb2g6SZ0TlhTvid4azTDaFT3q6eDKIqPP+WkY7hXNrdVNdSMabmG1wca2E+jJtFq0y+of/JkL2Kwcc7AuUNzKw1+s56leDSGlC63mf/tGn1BJOsyV1viqQ+CFzZ/ojQUITjkVIHiLi7zKP1WFq3k0Sl+e+mD6Q9eYWg9/ujWPYlsa5A+1jel1VCwrRZAGP0tlKgvUKcMXagVpgztINeC+YOqC6JyV53rghZ/I5QKhMTnGMsO3/lza3qc3y0OZDGPOXGsHaRzevRsdhaQIi3UTE/pxHA2V+Tf+5UtNm7sRxjheeDG7zNoK+uAToLaT2fAUxDiQZiIYNeUncNdTsJkXniyl3n+lY55DssS9ha94RtqaUMAT1d7pWRSbNHCL+mqC2PXzIUCpJT+IyGw/z58dtF7O55NXz0WWJLppySXiGu5eHiS/L3imJgfKf+FLekHFBEIMeFEyi3JPdCpmu15xnG1xjpw645gj0i8pHsl5826gpKQhCO/nwv7kgsw9Qu8V488bOIkioKGFp1owxWaAh4+VNYgxA2iSDzz1JeIKZ2eWdBbh6P6am6Ll32x9r8fUKcx64K6Vc/9rWU2C/GGJ8sl2d5YBbXL1j+l0PIfs9T6UVYr7W/hh5piyS17kGnB1AbWyEf7txEIM5YzKr3K06+z/KDF4FXkkT363+Ny/Y3b5K5vosRfOkPy+u+15dhFitLVYBlhFxuKXU48iO0uAYqFwA7ltHdEjej3LyCHJa/L9BiRhJF/PRR5h4wZNKv8SUHvjT6m7zrFkMeVgQWFI+yDdV00BwNZBWhAnubsRWHHun3d7v6s14gUmR5mAA',
+    jgCommunity: 'data:image/webp;base64,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',
+    jgShield: 'data:image/webp;base64,UklGRsADAABXRUJQVlA4ILQDAADwEgCdASpQAEsAPmEmkEUkIiGXqK7EQAYEtABmRBS+A4sbl4jLztvEa6TXmA6CnoAftv1lvoAeWV+2Pweftz+2HtINIWcnLA050zvyH/UXsFdIdSm5Y9YAbZ9LJdxSaSTTXQXz76Kcs7kP7A3HDTePGMHC6NsORAOwWUinJ/7PnnLhDF7XXwEXAjYtEKQ9+dhP+wQikoGYNaDBiX1aTakgAP79CcfqZwaaM/NLPiiz/Lf16pn4X8CabrR0ChPzZvdCQ4Zzyvfp3TtNNSvESmrYWJA1Go8WX8nEIVdameVQObgU9GiaORyWF93muS4Fi7wlloxIV995fdR4eRGIvteK85Wz4EBERIh0J1AtDFweGdJEHDTI3i6dn1f/uvd5fCIgyMxkuVFF3w4YfmPa9V0cz1REQHbXgNh2HsIzVtt+3rvkbNm4y1epTEJy+g1QG1FFErc9t+dOH/EKHSpUe38iZhRNyeXPzCC6ZhTKA3Q7Pwm9W6RKf9GIAt4uE/h3+PiidzRfxfkHtU+4CF4bnaEt/hodpn0CUnqc1cWN/XczneTwYOOMkAdtTo9ZWHPF/zO/w/7OQfs2pX2VmeNAZSobJvKllpD8fzVWYkvmnVvPzXe4X6PT75f8NPv/yNhzjw4uwMAN7P27gwi2qQlPAMAigfzryx2eLL0c90nkibvCV+81VnjQg3JI+0uKZNGu/kjzt0LdZ4Z7Rq8D5NiiW+U7JaIP2KVcN/NzxJRaq7SW8PF1y+auhEEldlMUAb3CwqInLcQW0RDNpb9rPI7gd8rxhNDdU8M1a3xA/iKb7EAHGi3pIFCouso7/9Eti/lmX36OEnJfRSM76mnuyfjcJtwt6uTK3cc0V0RQq2Gxxbh3Yz/2/NYnmo1Lk0qavBZzyaycy/rTc1X0E8Z1046FIPAX6Qe0HaqN81xerh7DLBebqCLILb7Y0R//YHIWnv+y4lSXT9w+VV/7oWsa59iBxobO+K6n7VQfTg0vmJonfRQoK/2JtJSjqXQuB9DgauG3zRT5L9MUkzQ2x68EQYBb0YlzrCUlXUr4RFBNzSrPpYhDIVp1V0MtootK1XnzpGonpe6/hic9YMGB6W6q57UZABtx1sL5V3UJlqNXgPfyyNGEmLJErJQG4XPHUUG/ADLwwDbtP1U2cYBHqhXhv9OSI8zepiZdWrh7nF/NINR9XfkHR9MFHdapsba014PLdNLXrtDDUZIqOji5ufaKRa+K/Am3MszoWLQsk88e1s6hfFPd2xAAAAA=',
+};
+
+
+// ══════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════
+function toast(message, type = 'info') {
+    const host = document.getElementById('toast-host');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = message;
+    host.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+}
+
+const ERROR_MESSAGES = {
+    game_daily_limit: "You've used all 40 game rewards for today — come back tomorrow!",
+    streak_already_claimed_today: "You've already claimed today's streak bonus — come back tomorrow!",
+    streak_claim_conflict: 'Please try again.',
+    ad_cooldown: 'Please wait a moment before watching another ad.',
+    game_play_too_short: 'Keep playing a little longer before claiming.',
+    game_claim_failed: 'Could not claim right now — please try again.',
+    below_minimum: 'Minimum amount not reached yet.',
+    daily_limit_reached: "Today's limit reached — come back tomorrow.",
+    // ⚠️ CHANGED — was "come back tomorrow" (daily-count model). Spin is now
+    // a rolling cooldown (SPIN_FREE_COOLDOWN_HOURS) — performSpin() shows
+    // the actual remaining time itself when this fires, so this is just the
+    // fallback if that computation isn't available for some reason.
+    no_spins_left: "No spins left right now — come back in a bit, or invite a friend for a bonus spin!",
+    lootbox_claim_required: '🎁 Claim your lootbox before earning more!',
+    ad_required: 'Please watch an ad first.',
+    insufficient_balance: 'Insufficient balance.',
+    insufficient_ads: `Watch ${WITHDRAW_ADS_REQUIRED} ads today before withdrawing.`,
+    coming_soon: 'This ad network is coming soon — not available yet.',
+    missing_task_token: 'Please reopen the task and try again.',
+    invalid_task_token: 'Please reopen the task and try again.',
+    claimed_too_fast: "Hold on a moment — you're claiming this a bit too fast.",
+    task_token_expired: 'This task took too long to claim — please reopen it.',
+    task_token_already_used: 'This task was already claimed.',
+    task_full: 'This task has reached its completion limit.',
+    // ⚠️ NEW — see TASK_COOLDOWN_SECONDS in lib/constants.js.
+    task_cooldown: "You're moving between tasks a bit too fast — please wait a few seconds before claiming another.",
+    // ⚠️ CHANGED — was a flat "1 valid referral" message; now proportional
+    // to the withdrawal amount (see requiredReferralsForUsd, lib/constants.js).
+    // The withdraw modal's own live check shows the exact number needed —
+    // this is just the fallback generic text.
+    referral_required: `After ${FREE_WITHDRAWALS_DISPLAY} withdrawals, valid referrals are required (1 per every $0.25 withdrawn). Invite friends to get them.`,
+    withdraw_already_pending: 'You already have a withdrawal request being processed. Please wait for it to be approved or rejected.',
+    below_minimum_wtc: `Minimum ${MIN_WITHDRAW_WTC.toLocaleString()} VYRO COIN required to withdraw.`,
+    already_withdrawn_today: 'You already withdrew today — try again tomorrow.',
+    address_used_by_other: 'This address is already used by another account.',
+    banned: 'Your account has been suspended.',
+    not_member: 'Please join the channel/group first.',
+    invalid_code: 'Invalid code — please type it in manually rather than copy-pasting.',
+    already_used: 'You already used this code.',
+    fully_used: 'This code has reached its usage limit.',
+    expired: 'This code has expired.',
+    task_full: 'This task has reached its quota.',
+    conflict_retry: 'Please try again in a moment.',
+    server_error: 'Server error, please try again shortly.',
+    unauthorized: 'Session expired — please reopen the app from Telegram.',
+    account_under_review: 'Your account is under review — join the channel & community to unlock earning.',
+    withdrawals_closed: 'Withdrawals are currently closed. Any previously submitted request will still be processed.',
+    sdk_not_loaded: 'Ad failed to load — please try again.',
+    timeout: 'Ad timed out — please try again.',
+    missing_ad_token: 'Please tap "Watch" again to load the ad properly.',
+    invalid_ad_token: 'Ad session invalid — please tap "Watch" again.',
+    watch_time_too_short: 'Please watch the full ad before closing it — closing early gives no reward.',
+    missing_view_time: 'Please update the app (reopen it) and try again.',
+    invalid_view_time: 'Ad could not be verified, please try again.',
+    ad_token_expired: 'This ad session expired — please tap "Watch" again.',
+    ad_token_already_used: 'This ad was already claimed.',
+    invalid_network: 'Unknown ad network — please refresh the app.',
+    server_misconfigured: 'Ad rewards are temporarily unavailable — please try again later.',
+    order_not_found: 'This order was not found — please start again.',
+    invalid_order_id: 'This order was not found — please start again.',
+    missing_fields: 'Something went wrong — please try again.',
+    user_not_found: 'Could not find your account — please reopen the app.',
+    // ⚠️ NEW — Create Task (see api/payments.js (resource:'taskcreate'))
+    invalid_package: 'Please select a valid package.',
+    title_too_long: 'Task title is too long — please shorten it.',
+    invalid_url: 'Please enter a valid link starting with http:// or https://',
+    // ⚠️ NEW (big update)
+    terms_required: 'Please accept the Terms & Conditions first.',
+    spin_too_fast: 'You can spin only once every 2 hours. Please wait for the timer.',
+    bonus_spin_limit: 'Daily bonus-spin limit reached — your remaining bonus spins are saved for tomorrow.',
+    terms_outdated: 'The terms were updated — please reopen the app.',
+    account_too_new: 'Your account is too new for its first withdrawal — please wait until it is old enough.',
+    account_locked: 'Your account is temporarily locked for review. Please contact support.',
+    first_withdraw_cap: 'Your withdrawal is above the allowed maximum — please lower the amount.',
+    invalid_amount: 'Please enter a valid amount.',
+    gate_failed: 'Could not process the withdrawal — please refresh and try again.',
+    invalid_address: 'That address/UID does not look valid. Check it and try again.',
+    withdraw_save_failed: 'Could not save your withdrawal request. Your balance was not charged — please try again.',
+    below_minimum: `Minimum ${MIN_WITHDRAW_WTC.toLocaleString()} VYRO COIN required to withdraw.`,
+};
+function errorText(code) { return ERROR_MESSAGES[code] || 'Something went wrong, please try again.'; }
+
+// ══════════════════════════════════════════════════════════════
+// API helpers — apiPost automatically attaches the signed Telegram
+// initData to every request, so individual call sites never need to
+// (and never should) pass a raw userId — the server derives it from
+// the verified session instead.
+// ⚠️ FIX — fetch() previously had NO timeout, so on a slow/dead mobile
+// connection this could hang forever, leaving the user stuck on the splash
+// screen's static "92%" bar with zero feedback and no way to recover short
+// of force-closing the app. Now every call aborts after API_TIMEOUT_MS and
+// resolves to {ok:false, error:'timeout'} instead of hanging indefinitely.
+// ══════════════════════════════════════════════════════════════
+const API_TIMEOUT_MS = 15000;
+async function fetchWithTimeout(url, options) {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } finally { clearTimeout(t); }
+}
+async function apiPost(path, body = {}) {
+    try {
+        const res = await fetchWithTimeout(`${API_BASE}/${path}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...body, initData: TG_INIT_DATA }),
+        });
+        const data = await res.json();
+        // ⚠️ NEW (big update) — server says the terms aren't accepted (e.g. terms version bumped mid-session) → show the terms screen again.
+        if (data && data.error === 'terms_required' && state.user && !document.getElementById('terms-sheet')) {
+            state.user.termsVersion = null;
+            showOnboarding(() => {});
+        }
+        return data;
+    } catch (e) { return { ok: false, error: e?.name === 'AbortError' ? 'timeout' : 'server_error' }; }
+}
+async function apiGet(path) {
+    try { const res = await fetchWithTimeout(`${API_BASE}/${path}`); return await res.json(); }
+    catch (e) { return { ok: false, error: e?.name === 'AbortError' ? 'timeout' : 'server_error' }; }
+}
+function fmtWTC(n) { return Math.floor(n || 0).toLocaleString('en-US'); }
+function wtcToUsd(wtc) { return (wtc / WTC_PER_USD_DISPLAY).toFixed(4); }
+
+// ══════════════════════════════════════════════════════════════
+// PARTICLE BURST — lightweight canvas confetti for reward moments
+// (claim lootbox, ad reward, task complete, withdraw, promo redeem).
+// Self-contained, auto-clears after ~1s — never blocks interaction.
+// ══════════════════════════════════════════════════════════════
+const burstCanvas = document.getElementById('burst-canvas');
+const burstCtx = burstCanvas.getContext('2d');
+function resizeBurstCanvas() { burstCanvas.width = window.innerWidth; burstCanvas.height = window.innerHeight; }
+resizeBurstCanvas();
+let __burstRaf = 0;
+window.addEventListener('resize', () => { cancelAnimationFrame(__burstRaf); __burstRaf = requestAnimationFrame(resizeBurstCanvas); });
+
+function triggerBurst(originEl) {
+    const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+    const ox = rect.left + rect.width / 2;
+    const oy = rect.top + rect.height / 2;
+    const colors = ['#D3BC7C', '#E2D09A', '#8CA888', '#3C6A4B', '#FCFBF6'];
+    const particles = Array.from({ length: 26 }, () => {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2.5 + Math.random() * 4.5;
+        return { x: ox, y: oy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2, size: 3 + Math.random() * 4, color: colors[Math.floor(Math.random() * colors.length)], life: 1 };
+    });
+    let frame = 0;
+    function tick() {
+        frame++;
+        burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+        let alive = false;
+        particles.forEach(p => {
+            if (p.life <= 0) return;
+            p.x += p.vx; p.y += p.vy; p.vy += 0.22; p.life -= 0.022;
+            if (p.life > 0) {
+                alive = true;
+                burstCtx.globalAlpha = Math.max(p.life, 0);
+                burstCtx.fillStyle = p.color;
+                burstCtx.beginPath(); burstCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); burstCtx.fill();
+            }
+        });
+        burstCtx.globalAlpha = 1;
+        if (alive && frame < 90) requestAnimationFrame(tick);
+        else burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+    }
+    tick();
+}
+
+// ══════════════════════════════════════════════════════════════
+// REWARD CELEBRATION — pure visual layer, shown on top of the
+// existing toast whenever a reward is actually credited. Does not
+// read/write any state itself — just displays what it's told.
+// ══════════════════════════════════════════════════════════════
+// ⚠️ CHANGED — added optional usdText param (e.g. "≈ $0.0006 USD"), shown
+// under the VYRO COIN amount so users can see what a reward is actually worth.
+// Backward compatible — existing calls with only 2 args still work exactly
+// as before, just without the USD line.
+function showCongrats(amountText, icon = '🎉', usdText = '') {
+    document.getElementById('congrats-overlay')?.remove();
+    const el = document.createElement('div');
+    el.id = 'congrats-overlay';
+    el.className = 'congrats-overlay';
+    el.innerHTML = `
+        <div class="congrats-card">
+            <div class="congrats-glow"></div>
+            <div class="congrats-icon">${icon}</div>
+            <div class="congrats-title">Congratulations!</div>
+            <div class="congrats-sub">You have received</div>
+            <div class="congrats-amount">${amountText}</div>
+            ${usdText ? `<div class="muted mono-num" style="font-size:12px; margin-top:-8px; margin-bottom:8px;">${usdText}</div>` : ''}
+            <div class="congrats-hint">Tap anywhere to continue</div>
+        </div>`;
+    document.body.appendChild(el);
+    triggerBurst(el.querySelector('.congrats-card'));
+    el.addEventListener('click', () => dismissCongrats(el));
+    setTimeout(() => dismissCongrats(el), 1800);
+}
+function dismissCongrats(el) {
+    if (!el || el.dataset.closing) return;
+    el.dataset.closing = '1';
+    el.classList.add('closing');
+    setTimeout(() => el.remove(), 300);
+}
+
+// ══════════════════════════════════════════════════════════════
+// COUNT-UP — animates a number from its current value to a new target
+// ══════════════════════════════════════════════════════════════
+function animateCountUp(el, from, to, duration = 700) {
+    if (!el) return;
+    const start = performance.now();
+    const diff = to - from;
+    function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 4);
+        el.textContent = fmtWTC(from + diff * eased);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = fmtWTC(to);
+    }
+    requestAnimationFrame(step);
+}
+
+// ══════════════════════════════════════════════════════════════
+// ONBOARDING
+// ══════════════════════════════════════════════════════════════
+const ONBOARD_KEY = 'vyrova_onboarded_v1';
+
+// ══════════════════════════════════════════════════════════════
+// ONBOARDING — SEASON 3: fully replaced. No more icon-in-circle /
+// one-slide-at-a-time dot carousel (that pattern was carried over from a
+// different bot's UI). New model: everything presented as a single
+// "membership ticket" — reuses the same perforated-ticket component
+// language as the Home hero (ticket-notch / ticket-tear / ticket-barcode)
+// so onboarding feels like part of THIS app's visual system, not a
+// generic template. Two screens instead of three: the ticket (what the
+// app does), then a signed-contract-style terms screen.
+// ══════════════════════════════════════════════════════════════
+// Onboarding / Terms removed (project will use its own). Goes straight into the app.
+function showOnboarding(onDone) { try { localStorage.setItem(ONBOARD_KEY, '1'); } catch (e) {} onDone(); }
+
+// ══════════════════════════════════════════════════════════════
+// JOIN-GATE
+// ══════════════════════════════════════════════════════════════
+function showJoinGate(opts, onJoined) {
+    const root = document.getElementById('modal-root');
+    // ⚠️ CHANGED — heading now wraps "channel/community" (or "to earn" on
+    // first-join) in .jg-heading-hl for the gradient highlight, matching the
+    // new design reference. Applied to BOTH scenarios (first-join AND
+    // re-join) for visual consistency, since they share this one component.
+    const heading = opts.leftAfterVerifying
+        ? `You left our <span class="jg-heading-hl">channel / community</span>`
+        : `One last step <span class="jg-heading-hl">to earn</span>`;
+    const sub = opts.leftAfterVerifying
+        ? 'Please re-join to keep using VYROVA.'
+        : 'Join our official channel & community to unlock VYROVA.';
+
+    root.innerHTML = `
+        <div class="overlay" style="align-items:center;">
+            <div class="sheet ob-slide-in" style="border-radius:22px; text-align:center; padding: 36px 22px 30px; position:relative; overflow:hidden;">
+                <div class="jg-glow"></div>
+                <div class="jg-badge">
+                    <div class="jg-badge-ring"></div>
+                    <div class="jg-badge-ring"></div>
+                    <div class="jg-badge-ring"></div>
+                    <div class="jg-badge-core">
+                        <img src="${DESIGN_ICONS.jgHero}" alt="">
+                    </div>
+                </div>
+                <div class="jg-heading">${heading}</div>
+                <div class="jg-sub">${sub}</div>
+                <div style="position:relative; z-index:1;">
+                    <div class="jg-row">
+                        <a href="${OFFICIAL_CHANNEL_URL}" target="_blank" class="jg-link-card jg-channel">
+                            <span class="jg-link-arrow">↗</span>
+                            <span class="jg-link-chip"><img src="${DESIGN_ICONS.jgChannel}" alt=""></span>
+                            <span class="jg-link-label">Join Channel</span>
+                            <span class="jg-link-cta">Join Now →</span>
+                        </a>
+                        <a href="${COMMUNITY_GROUP_URL}" target="_blank" class="jg-link-card jg-community">
+                            <span class="jg-link-arrow">↗</span>
+                            <span class="jg-link-chip"><img src="${DESIGN_ICONS.jgCommunity}" alt=""></span>
+                            <span class="jg-link-label">Join Community</span>
+                            <span class="jg-link-cta">Join Now →</span>
+                        </a>
+                    </div>
+                    <a href="${PAYMENT_PROOF_GROUP_URL}" target="_blank" class="jg-link-card jg-wide jg-proof">
+                        <span class="jg-link-chip jg-proof-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6.5v11M15 9a3 3 0 00-3-1h0a2.5 2.5 0 000 5h1a2.5 2.5 0 010 5h0a3 3 0 01-3-1"/></svg></span>
+                        <span class="jg-link-label">Join Payment Proof Group</span>
+                        <span class="jg-link-cta">Join Now →</span>
+                    </a>
+                    <button class="jg-check-btn" id="jg-check">
+                        <div class="jg-check-icon"><img src="${DESIGN_ICONS.jgShield}" alt=""></div>
+                        <div class="jg-check-text">
+                            <div class="jg-check-title">I've joined, check now</div>
+                            <div class="jg-check-sub">⚡ We'll verify instantly</div>
+                        </div>
+                        <div class="jg-check-arrow">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>`;
+
+    document.getElementById('jg-check').onclick = async () => {
+        const btn = document.getElementById('jg-check');
+        const subEl = btn.querySelector('.jg-check-sub');
+        subEl.textContent = 'Checking...'; btn.disabled = true;
+        const r = await apiGet(`user?action=checkJoin&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        if (r.joined) { triggerBurst(btn); setTimeout(() => { root.innerHTML = ''; onJoined(); }, 250); }
+        else { subEl.textContent = '⚡ We\'ll verify instantly'; btn.disabled = false; toast('Please join all required places first.', 'error'); }
+    };
+}
+
+function startJoinWatcher() {
+    setInterval(async () => {
+        if (document.getElementById('modal-root').innerHTML.includes('jg-check')) return;
+        const r = await apiGet(`user?action=checkJoin&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        if (!r.joined) showJoinGate({ leftAfterVerifying: r.leftAfterVerifying }, () => {});
+    }, 60000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// APP SHELL
+// ══════════════════════════════════════════════════════════════
+// ⚠️ REDESIGN — Ivory & Sage. Same three tabs (Home / Task / Refer), same handlers.
+// Profile (previously the header chip) now lives in the dock and opens the same
+// openProfileModal(); the centre coin opens the Earn tab (games).
+const TABS = [
+    { id: 'home',  label: 'Home',  icon: '<path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 10v9.5a1 1 0 001 1h11a1 1 0 001-1V10"/><path d="M10 20.5v-5h4v5"/>' },
+    { id: 'task',  label: 'Task',  icon: '<rect x="4.5" y="3.5" width="15" height="17.5" rx="3"/><path d="M9 3.5V5.5h6V3.5M8.5 11.5l2.2 2.2 4.3-4.4M8.5 17h7"/>' },
+    { id: 'refer', label: 'Refer', icon: '<circle cx="9" cy="8" r="3.6"/><path d="M2.8 20v-1.4a4.6 4.6 0 014.6-4.6h3.2a4.6 4.6 0 014.6 4.6V20"/><circle cx="17.6" cy="9" r="2.6"/><path d="M21.6 19.4v-1a3.6 3.6 0 00-2.4-3.4"/>' },
+];
+const TAB_ORDER = ['home', 'task', 'earn', 'refer', 'profile']; // Earn = the centre coin slot, Profile = the dock's last slot (neither is in TABS: the dock renders them separately)
+const navIconSvg = (path) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+
+function renderShell() {
+    const root = document.getElementById('app-root');
+    const handle = USERNAME && USERNAME !== 'N/A' ? '@' + USERNAME : FIRST_NAME;
+    root.innerHTML = `
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#vy-v-dark"/></svg></div>
+                <div class="brand-text">
+                    <div class="brand-name">VYROVA</div>
+                    <div class="brand-handle" translate="no">${esc(handle)}</div>
+                </div>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn lang-btn" id="lang-btn" aria-label="Language">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg>
+                    <span class="lang-code" id="lang-code">${(window.i18n ? window.i18n.LANGS[window.i18n.lang()].short : 'EN')}</span>
+                </button>
+                <button class="icon-btn" id="history-btn" aria-label="History">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 108.5-8.5A8.6 8.6 0 005.9 6"/><path d="M3.5 4v3.5H7M12 7.5V12l3 2"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="tab-content"></div>
+        <nav class="bottomnav" aria-label="Main">
+            ${TABS.slice(0, 2).map(t => `<button class="nav-item" data-tab="${t.id}">${navIconSvg(t.icon)}<span class="nav-label">${t.label}</span></button>`).join('')}
+            <button class="nav-coin" id="nav-coin" data-tab="earn" aria-label="Earn"><span class="nav-coin-halo"></span><span class="nav-coin-body">${VyFX.coinFlat()}</span><span class="nav-coin-label">Earn</span></button>
+            ${TABS.slice(2).map(t => `<button class="nav-item" data-tab="${t.id}">${navIconSvg(t.icon)}<span class="nav-label">${t.label}</span></button>`).join('')}
+            <button class="nav-item" id="nav-profile" data-tab="profile" aria-label="Profile">${avatarHtml(FIRST_NAME, 26)}<span class="nav-label">Profile</span></button>
+            <i class="nav-indicator off"></i>
+        </nav>`;
+    document.querySelectorAll('.nav-item[data-tab]').forEach(btn => { btn.onclick = () => switchTab(btn.dataset.tab); });
+    document.getElementById('nav-coin').onclick = () => { if (state.activeTab === 'earn') window.scrollTo({ top: 0, behavior: 'smooth' }); else switchTab('earn'); };
+    document.getElementById('history-btn').onclick = openHistoryModal;
+    document.getElementById('lang-btn').onclick = openLanguageModal;
+}
+
+// ⚠️ NEW (big update) — language switcher (header 🌐 button). Mini-app UI only.
+function openLanguageModal() {
+    const i18n = window.i18n;
+    if (!i18n) return;
+    const cur = i18n.lang();
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.85); overflow-y:auto;">
+                <div class="sheet-handle"></div>
+                <div class="section-title" style="margin-bottom:4px;">Language</div>
+                <div class="muted" style="font-size:12px; margin-bottom:14px;">Choose your language</div>
+                ${Object.entries(i18n.LANGS).map(([code, l]) => `
+                    <button class="lang-option ${code === cur ? 'active' : ''}" data-lang="${code}" translate="no">
+                        <span>${l.flag || ''} ${l.name}</span><span style="color:var(--accent);">${code === cur ? '✓' : ''}</span>
+                    </button>`).join('')}
+            </div>
+        </div>`;
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.onclick = () => {
+            i18n.setLang(btn.dataset.lang);
+            const badge = document.getElementById('lang-code');
+            if (badge) badge.textContent = i18n.LANGS[btn.dataset.lang].short;
+            document.getElementById('modal-root').innerHTML = '';
+        };
+    });
+}
+
+// ══════════════════════════════════════════════════════════════
+// HISTORY — withdraw request status (received / pending only)
+// ══════════════════════════════════════════════════════════════
+const HISTORY_STATUS_UI = {
+    pending:  { label: 'Pending',  icon: '🕓', color: 'var(--signal)' },
+    approved: { label: 'Received', icon: '✅', color: 'var(--success)' },
+};
+async function openHistoryModal() {
+    const root = document.getElementById('modal-root');
+    root.innerHTML = `
+        <div class="overlay">
+            <div class="sheet" style="max-height:calc(var(--ovh, 100vh) * 0.78); display:flex; flex-direction:column;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                    <div style="font-family:var(--font-display); font-weight:700; font-size:18px;">🕓 Withdraw History</div>
+                    <button class="icon-btn" onclick="document.getElementById('modal-root').innerHTML=''" aria-label="Close">✕</button>
+                </div>
+                <div id="history-list" style="overflow-y:auto; flex:1;">
+                    <div class="muted" style="text-align:center; padding:30px 0;">Loading...</div>
+                </div>
+            </div>
+        </div>`;
+
+    try {
+        const r = await apiGet(`withdraw?action=history&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        const listEl = document.getElementById('history-list');
+        if (!listEl) return; // modal closed before response arrived
+
+        // ⚠️ FIX: previously r.history was filtered directly without checking
+        // r.ok first — so any auth/server error silently showed "no requests"
+        // instead, and the real cause was never visible. Errors are now shown
+        // explicitly and separately.
+        if (!r.ok) {
+            console.error('history fetch failed:', r.error, r.reason);
+            listEl.innerHTML = `<div class="muted" style="text-align:center; padding:30px 0;">Couldn't load history (${r.error || 'unknown'}). Close the app and reopen it.</div>`;
+            return;
+        }
+
+        const items = (r.history || []).filter(h => h.status === 'pending' || h.status === 'approved');
+
+        if (!items.length) {
+            listEl.innerHTML = `<div class="muted" style="text-align:center; padding:30px 0;">No withdraw requests yet.</div>`;
+            return;
+        }
+
+        listEl.innerHTML = items.map((h, i) => {
+            const st = HISTORY_STATUS_UI[h.status] || { label: h.status, icon: '•', color: 'var(--ink-muted)' };
+            const date = h.createdAt ? new Date(h.createdAt).toLocaleString() : '';
+            return `
+                <div class="card" style="margin-bottom:10px; opacity:0; animation: jg-rise 0.35s ease ${Math.min(i * 0.05, 0.4)}s forwards;">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <div>
+                            <div style="font-weight:700; font-size:15px;">$${Number(h.cashAmount ?? h.usdAmount ?? 0).toFixed(2)} ${h.currency || 'USDT'}</div>
+                            <div class="muted" style="font-size:12px; margin-top:2px;">${(WITHDRAW_METHOD_LABELS[h.method] || h.method || '')} · ${date}</div>
+                            ${h.status === 'pending' ? `<div class="muted" style="font-size:11px; margin-top:4px;">⏱ Expected within ${WITHDRAW_PROCESS_MIN_HOURS_DISPLAY}–${WITHDRAW_PROCESS_MAX_HOURS_DISPLAY} hours</div>` : ''}
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:color-mix(in srgb, ${st.color} 16%, transparent); color:${st.color}; font-size:12px; font-weight:700; white-space:nowrap;">
+                            ${st.icon} ${st.label}
+                        </div>
+                    </div>
+                </div>`;
+        }).join('');
+    } catch (e) {
+        const listEl = document.getElementById('history-list');
+        if (listEl) listEl.innerHTML = `<div class="muted" style="text-align:center; padding:30px 0;">Failed to load history.</div>`;
+    }
+}
+
+// ══════════════════════════════════════════════════════════════
+// GIFT BOX — admin-sent surprise gift, checked when the app opens
+// ══════════════════════════════════════════════════════════════
+async function checkPendingGift() {
+    try {
+        const r = await apiGet(`gift?action=check&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        if (r.ok && r.gift) showGiftBox(r.gift);
+    } catch { /* silent — non-critical */ }
+}
+
+function showGiftBox(gift) {
+    const root = document.getElementById('modal-root');
+    root.innerHTML = `
+        <div class="overlay" style="align-items:center;">
+            <div class="sheet ob-slide-in" style="border-radius:22px; text-align:center; padding: 34px 22px 30px; position:relative; overflow:hidden;">
+                <div class="gb-glow"></div>
+                <div class="gb-rays"></div>
+                <div class="gb-box-wrap"><span class="gb-box">🎁</span></div>
+                <div style="font-family:var(--font-display); font-weight:700; font-size:20px; margin-bottom:6px; position:relative; z-index:1;">🎉 Congratulations!</div>
+                <div class="muted" style="font-size:13px; line-height:1.6; margin-bottom:16px; position:relative; z-index:1;">You have received a gift from admin</div>
+                <div class="gb-reason-card">
+                    <div class="gb-reason-label">Reason</div>
+                    <div class="gb-reason-text">${(gift.reason || '').replace(/</g, '&lt;')}</div>
+                </div>
+                <button class="btn gb-claim-btn" id="gb-claim-btn">🎁 Claim Gift</button>
+            </div>
+        </div>`;
+
+    document.getElementById('gb-claim-btn').onclick = async () => {
+        const btn = document.getElementById('gb-claim-btn');
+        btn.textContent = 'Claiming...'; btn.disabled = true;
+        try {
+            const r = await apiPost('gift', { action: 'claim', giftId: gift.id });
+            if (!r.ok) { btn.textContent = '🎁 Claim Gift'; btn.disabled = false; toast('Gift already claimed or expired.', 'error'); return; }
+
+            // ── reveal amount + confetti, then update balance ──
+            const sheet = document.querySelector('.sheet');
+            sheet.innerHTML = `
+                <div class="gb-glow"></div>
+                <div style="position:relative; z-index:1; text-align:center; padding:10px 6px;">
+                    <div style="font-size:44px;">🎉</div>
+                    <div class="gb-amount-reveal">+${fmtWTC(r.amount)} VYRO COIN</div>
+                    <div class="muted" style="font-size:13px; margin-bottom:20px;">Gift claimed successfully!</div>
+                    <button class="btn btn-primary" id="gb-done-btn">Awesome!</button>
+                </div>`;
+            triggerBurst(sheet);
+            if (state.user) state.user.wtcBalance = (state.user.wtcBalance || 0) + r.amount;
+            document.getElementById('gb-done-btn').onclick = () => {
+                root.innerHTML = '';
+                if (state.activeTab === 'home') renderHome(); else if (state.activeTab === 'profile') renderProfileTab();
+            };
+        } catch {
+            btn.textContent = '🎁 Claim Gift'; btn.disabled = false;
+            toast('Something went wrong, try again.', 'error');
+        }
+    };
+}
+
+function switchTab(tabId) {
+    const prev = state.activeTab;
+    const first = !document.querySelector('.nav-item.active');
+    state.activeTab = tabId;
+    document.querySelectorAll('.nav-item, .nav-coin').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+    const renderers = { home: renderHome, task: renderTaskTab, earn: renderEarnTab, refer: renderReferTab, profile: renderProfileTab };
+    const root = document.getElementById('tab-content');
+    root.dataset.enter = '1'; // lets renderHome() tell a real tab entrance from an in-place refresh
+    renderers[tabId]();
+    const dir = first ? 0 : (TAB_ORDER.indexOf(tabId) >= TAB_ORDER.indexOf(prev) ? 1 : -1);
+    VyFX.enterTab(root, dir);
+    VyFX.moveNavIndicator();
+    VyFX.refresh();
+    if (!first) window.scrollTo({ top: 0, behavior: 'auto' });
+}
+// ⚠️ REMOVED — the "live withdraw" ticker (startWithdrawTicker(), the
+// data?type=recentWithdrawals frontend call, and the wd-ticker-text markup)
+// per admin request. The backend endpoint itself (api/data.js) is untouched
+// — nothing else calls it, so it's just unused now, not broken.
+
+// ══════════════════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════════════════
+async function renderHome() {
+    const root = document.getElementById('tab-content');
+    const u = state.user || {};
+    const bal = u.wtcBalance || 0;
+    const prevBalance = window.__lastShownBalance ?? bal;
+    const rateUsd = (1 / WTC_PER_USD_DISPLAY); // e.g. 50,000 VYRO COIN = $1 -> 1 VYRO COIN = $0.00002
+    // "Level" is purely cosmetic: derived client-side from the balance (every
+    // 5,000 VYRO COIN = +1 level). There is no level field in the backend and it
+    // gates nothing. The thin bar under the pill shows progress to the next level.
+    // Spin row status is real data: same cooldown maths the Spin modal uses.
+    const spinMs = spinCooldownMsRemaining(u);
+    const spinSub = spinMs > 0 ? `Next free spin in ${fmtCooldown(spinMs)}` : '<span class="spin-sub-up">Up to 100</span><span class="spin-sub-left">3 spins left</span>';
+    // true on a real tab entrance, false when Home is just refreshed in place (after a spin, gift…)
+    const enter = root.dataset.enter === '1'; root.dataset.enter = '0';
+    root.classList.toggle('no-enter', !enter);
+
+    const chev = '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+    const arrowBtn = '<span class="hr-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>';
+    root.innerHTML = `
+        <div class="vy-hero anim-in">
+            <div class="coin-stage" data-parallax="0.06">
+                <div class="coin-aura"></div>
+                ${VyFX.coin3d({ size: 128 })}
+                ${VyFX.leaf('l1')}${VyFX.leaf('l2')}${VyFX.leaf('l3')}
+            </div>
+            <div class="hero-main">
+                <div class="hero-eyebrow">VYRO COIN Balance</div>
+                <div id="home-balance-num" class="hero-amount mono-num">${fmtWTC(prevBalance)}</div>
+                <div class="hero-sub">
+                    <span class="vy-chip">${VyFX.coinFlat(24)}<span>VYRO COIN</span></span>
+                    <span class="vy-chip green mono-num">≈ $${wtcToUsd(bal)}</span>
+                </div>
+            </div>
+            <div class="hero-rate mono-num">1 VYRO COIN = $${rateUsd.toFixed(5)}</div>
+            <div class="vy-tray">
+                <button class="act" id="home-qi-task">
+                    <span class="act-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5L5 13.5h6l-1 8 8-11h-6l1-8z"/></svg></span>
+                    <span>Tasks</span>
+                </button>
+                <button class="act" id="home-promo-btn">
+                    <span class="act-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8.5H4V12M2.5 7.5h19V12h-19zM12 7.5v13M12 7.5S10.8 3.5 8 3.5a2 2 0 000 4M12 7.5s1.2-4 4-4a2 2 0 010 4"/></svg></span>
+                    <span>Redeem</span>
+                </button>
+                <button class="act" id="home-feat-withdraw">
+                    <span class="act-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.8L12 15.3l4.5-4.5M5 20h14"/></svg></span>
+                    <span>Withdraw</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-pad anim-in-2" style="margin-top:14px;">
+            <button class="row-card" id="home-qi-refer">
+                <span class="row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.6"/><path d="M2.8 20v-1.4a4.6 4.6 0 014.6-4.6h3.2a4.6 4.6 0 014.6 4.6V20"/><circle cx="17.6" cy="9" r="2.6"/><path d="M21.6 19.4v-1a3.6 3.6 0 00-2.4-3.4"/></svg></span>
+                <span class="row-body"><span class="row-title" style="display:block;">Invite &amp; Earn</span><span class="row-sub" style="display:block;">Total bonus per friend</span></span>
+                <span class="row-cta" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            </button>
+        </div>
+
+        <div class="section-pad anim-in-3" style="margin-top:12px;">
+            <button class="row-card" id="home-feat-spin" aria-label="Spin Wheel">
+                <span class="sw-mini" aria-hidden="true"><span class="sw-mini-disc" style="background:${SPIN_WHEEL_GRADIENT};"></span><span class="sw-mini-badge">${VyFX.coinFlat()}</span></span>
+                <span class="row-body"><span class="row-title" style="display:block;">Spin Wheel</span><span class="row-sub" style="display:block;">${spinSub}</span></span>
+                <span class="row-cta" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 11-2.6-5.9M20 4v4.5h-4.5"/></svg></span>
+            </button>
+        </div>
+
+        <!-- Leaderboard / Weekly Contest / Payment Channel / Official Channel — premium card stack -->
+        <div class="section-pad anim-in-4" style="margin-top:14px;">
+            <div class="home-card-list">
+                <button class="home-row" id="home-leaderboard-btn">
+                    <div class="home-row-icon gold"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM17 6h2a2 2 0 010 4h-2M7 6H5a2 2 0 000 4h2"/></svg></div>
+                    <div class="home-row-body"><div class="quick-grid-title">Leaderboard</div><div class="quick-grid-sub">Top earners ranking</div></div>
+                    <svg class="home-row-wm" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M6 20l12 10 14-18 14 18 12-10-5 28H11L6 20z"/><rect x="11" y="50" width="42" height="6" rx="3"/></svg>
+                    ${arrowBtn}
+                </button>
+                <button class="home-row" id="home-milestone-btn">
+                    <div class="home-row-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15.2l2.2 2.2 3.9-4.2"/></svg></div>
+                    <div class="home-row-body"><div class="quick-grid-title">Weekly Contest</div><div class="quick-grid-sub">Win exciting rewards</div></div>
+                    <svg class="home-row-wm" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M8 26h48v10H8zM12 38h40v18a3 3 0 01-3 3H15a3 3 0 01-3-3V38z"/><path d="M29 26h6v33h-6z" opacity=".55"/><path d="M32 26c-8 0-15-4-13-10 2-5 9-4 13 10zm0 0c8 0 15-4 13-10-2-5-9-4-13 10z"/></svg>
+                    ${arrowBtn}
+                </button>
+                <button class="home-row" id="home-pay-channel-btn">
+                    <div class="home-row-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6.5v11M15 9a3 3 0 00-3-1h0a2.5 2.5 0 000 5h1a2.5 2.5 0 010 5h0a3 3 0 01-3-1"/></svg></div>
+                    <div class="home-row-body"><div class="quick-grid-title">Payment Channel</div><div class="quick-grid-sub">Latest payment proof</div></div>
+                    <svg class="home-row-wm" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M10 18a6 6 0 016-6h28l-2 8H16a2 2 0 000 4h34a6 6 0 016 6v22a6 6 0 01-6 6H16a6 6 0 01-6-6V18z"/><circle cx="46" cy="40" r="4" fill="#fff"/></svg>
+                    ${arrowBtn}
+                </button>
+                <button class="home-row" id="home-official-channel-btn">
+                    <div class="home-row-icon gold"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.5 2.5L10.5 13.5M21.5 2.5l-7 19-4-8.5-8.5-4 19.5-6.5z"/></svg></div>
+                    <div class="home-row-body"><div class="quick-grid-title">Official Channel</div><div class="quick-grid-sub">Join our channel</div></div>
+                    <svg class="home-row-wm" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M60 4L4 26l16 6 6 20 8-12 14 10L60 4z"/><path d="M20 32l30-20-24 26-2 14z" fill="#fff" opacity=".6"/></svg>
+                    ${arrowBtn}
+                </button>
+            </div>
+        </div>
+
+        <div class="section-pad anim-in-5" style="margin-top:20px;">
+            <div class="ps-section">
+                <svg class="ps-deco" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 C 70 14, 150 20, 262 11" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><circle cx="262" cy="11" r="3.2" fill="currentColor"/></svg>
+                <div class="ps-head">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3.5" y="11" width="4.2" height="9.5" rx="1.4"/><rect x="9.9" y="4" width="4.2" height="16.5" rx="1.4"/><rect x="16.3" y="8" width="4.2" height="12.5" rx="1.4"/></svg>
+                    <span>Platform stats</span>
+                </div>
+                <div class="stat-grid" id="home-platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="currentColor" stroke="none"/><path d="M8.6 12.2l2.3 2.3 4.5-4.7" stroke="#F7F3E8"/></svg></div>
+                        <div class="stat-text">
+                            <div class="stat-num skel" style="height:30px; width:40px;"></div>
+                            <div class="stat-label">Tasks available</div>
+                        </div>
+                        <span class="stat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.6"/><path d="M2.8 20v-1.4a4.6 4.6 0 014.6-4.6h3.2a4.6 4.6 0 014.6 4.6V20"/><circle cx="17.6" cy="9" r="2.6"/><path d="M21.6 19.4v-1a3.6 3.6 0 00-2.4-3.4"/></svg></div>
+                        <div class="stat-text">
+                            <div class="stat-num">${u.referralCount || 0}</div>
+                            <div class="stat-label">Your referrals</div>
+                        </div>
+                        <span class="stat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+    // Fit the balance beside the coin using the FINAL value, then count up to it
+    // from the previous one (the number itself animates, the font size doesn't jump).
+    const balEl = document.getElementById('home-balance-num');
+    balEl.textContent = fmtWTC(bal);
+    VyFX.fitNumber(balEl, 48, 26);
+    balEl.textContent = fmtWTC(prevBalance);
+    animateCountUp(balEl, prevBalance, bal, enter || prevBalance !== bal ? 1300 : 0);
+    window.__lastShownBalance = bal;
+
+    document.getElementById('home-feat-withdraw').onclick = openWithdrawModal;
+    document.getElementById('home-promo-btn').onclick = openPromoModal;
+    document.getElementById('home-qi-task').onclick = () => switchTab('task');
+    document.getElementById('home-qi-refer').onclick = () => switchTab('refer');
+    document.getElementById('home-milestone-btn').onclick = openWeeklyContestModal;
+    document.getElementById('home-leaderboard-btn').onclick = openLeaderboardModal;
+    document.getElementById('home-official-channel-btn').onclick = () => window.open(OFFICIAL_CHANNEL_URL, '_blank');
+    document.getElementById('home-pay-channel-btn').onclick = () => window.open(PAYMENT_PROOF_GROUP_URL, '_blank');
+    document.getElementById('home-feat-spin').onclick = openSpinWheelModal;
+    VyFX.refresh();
+
+    // Platform-wide stats: total tasks currently available. Reuses the SAME
+    // data?type=tasks endpoint the Task tab already calls -- no new backend
+    // endpoint needed. Runs after the initial paint so it doesn't block Home
+    // from showing (skeleton -> number).
+    (async () => {
+        const tasksRes = await apiGet('data?type=tasks');
+        const statsEl = document.getElementById('home-platform-stats');
+        if (!statsEl) return; // user navigated away before this resolved
+        const nums = statsEl.querySelectorAll('.stat-num.skel');
+        if (nums[0]) { nums[0].classList.remove('skel'); nums[0].style.cssText = ''; nums[0].textContent = tasksRes.ok ? (tasksRes.tasks?.length || 0) : '—'; nums[0].classList.add('count-pop'); }
+    })();
+}
+
+// Shared promo-redeem flow (ad-gate -> claim), used by BOTH the inline Home
+// promo box and the openPromoModal() popup, so the anti-abuse "must watch an
+// ad before the code is spent" behavior can't drift out of sync between them.
+async function redeemPromoCode(code, btn, onSuccess) {
+    if (!code) return toast('Please enter a code.', 'error');
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Checking code...'; btn.disabled = true;
+
+    // ⚠️ NEW — validate the code BEFORE showing an ad. Previously the ad
+    // played no matter what, so an invalid/expired/already-used code still
+    // cost the user a full ad watch before telling them it failed. This
+    // check doesn't spend the code (see handleCheckPromo in api/earn.js) —
+    // the real, atomic redemption still happens after the ad, below.
+    const check = await apiPost('earn', { action: 'checkPromo', code });
+    if (!check.ok) {
+        toast(errorText(check.error), 'error');
+        btn.textContent = originalLabel; btn.disabled = false;
+        return;
+    }
+
+    btn.textContent = 'Checking...';
+    const r = await apiPost('earn', { action: 'claimPromo', code });
+    if (r.ok) {
+        toast(`+${r.reward} VYRO COIN added!`, 'success');
+        triggerBurst(btn);
+        showCongrats(`+${r.reward} VYRO COIN`, '🎁', `≈ $${wtcToUsd(r.reward)} USD`);
+        await refreshUser();
+        onSuccess?.();
+    } else {
+        toast(errorText(r.error), 'error');
+    }
+    btn.textContent = originalLabel; btn.disabled = false;
+}
+
+// Leaderboard moved behind its own button/modal instead of living inline on
+// Home permanently (same podium-rendering logic as before, just relocated).
+async function openLeaderboardModal() {
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.8); overflow-y:auto;">
+                <div class="sheet-handle"></div>
+                <div class="section-title" style="margin-bottom:2px;">🏆 Top 20 Referrers</div>
+                <div class="muted" style="font-size:12px; margin-bottom:14px;">Ranked by lifetime referrals.</div>
+                <div id="lb-modal-body">
+                    <div class="skel" style="height:14px; width:70%; margin:10px 0;"></div>
+                    <div class="skel" style="height:14px; width:50%; margin:10px 0;"></div>
+                    <div class="skel" style="height:14px; width:60%; margin:10px 0;"></div>
+                </div>
+            </div>
+        </div>`;
+
+    const body = document.getElementById('lb-modal-body');
+    const r = await apiGet('data?type=leaderboard');
+    if (!body) return; // modal closed before this resolved
+    if (!r.ok || !r.leaderboard?.length) {
+        body.innerHTML = `<div class="muted" style="text-align:center; padding:16px 0;">No data yet.</div>`;
+        return;
+    }
+    const list = r.leaderboard.slice(0, 20);
+    const top3 = list.slice(0, 3);
+    const rest = list.slice(3);
+    const medals = ['🥇', '🥈', '🥉'];
+    const podiumOrder = [1, 0, 2].filter(i => top3[i]);
+    const podiumHtml = top3.length ? `
+        <div class="podium">
+            ${podiumOrder.map(i => {
+                const p = top3[i];
+                if (!p) return '';
+                return `
+                <div class="podium-slot rank-${i + 1}" style="opacity:0; animation:rise-in 0.4s ease ${i * 0.06}s forwards;">
+                    <div class="podium-avatar" style="background:var(--signal-soft); color:var(--signal);">${esc((p.firstName || '?')[0].toUpperCase())}</div>
+                    <div class="podium-medal">${medals[i]}</div>
+                    <div class="podium-name">${esc(p.firstName || 'User')}</div>
+                    <div class="podium-refs">${p.referralCount || 0} refs</div>
+                </div>`;
+            }).join('')}
+        </div>
+        ${rest.length ? '<div style="height:1px; background:var(--border); margin:6px 0 4px;"></div>' : ''}
+    ` : '';
+    const restHtml = rest.map((p, i) => `
+        <div class="lb-row" style="opacity:0; animation:rise-in 0.4s ease ${Math.min(i * 0.04, 0.4)}s forwards; ${i < rest.length - 1 ? 'border-bottom:0.5px solid var(--border);' : ''}">
+            <div class="lb-rank-num">${i + 4}</div>
+            <div style="width:30px; height:30px; border-radius:50%; background:var(--surface-raised); color:var(--ink-faint); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px;">${esc((p.firstName || '?')[0].toUpperCase())}</div>
+            <div style="flex:1; font-size:13.5px; font-weight:500;">${esc(p.firstName || 'User')}</div>
+            <div style="font-size:12.5px; color:var(--ink-muted); font-family:var(--font-display);">${p.referralCount || 0} refs</div>
+        </div>`).join('');
+    body.innerHTML = podiumHtml + restHtml;
+}
+
+// ⚠️ NEW — Weekly Referral Contest (replaces the old "Milestones — coming
+// soon" stub on the Home milestone button). Shows the user's LIVE
+// weeklyReferralCount against the same WEEKLY_REFERRAL_MIN_COUNT threshold
+// the admin panel uses, plus a mini leaderboard from api/data.js's new
+// `weeklyContest` type. Nothing here needs its own "reset" — it reads the
+// exact same `weeklyReferralCount` field the admin's bot.js
+// a_weekly_reset_confirm zeroes out, so the moment the admin taps
+// "🔄 Reset week now", this screen shows 0/${WEEKLY_REFERRAL_MIN_COUNT_DISPLAY}
+// for everyone on their next visit automatically.
+async function openWeeklyContestModal() {
+    const u = state.user || {};
+    const mine = u.weeklyReferralCount || 0;
+    const need = WEEKLY_REFERRAL_MIN_COUNT_DISPLAY;
+    const qualified = mine >= need;
+    const pct = Math.min(100, Math.round((mine / need) * 100));
+
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.85); overflow-y:auto;">
+                <div class="sheet-handle"></div>
+                <div class="section-title" style="margin-bottom:2px;">📅 Weekly Referral Contest</div>
+                <div class="muted" style="font-size:12px; margin-bottom:14px;">Refer ${need}+ new people THIS WEEK to qualify. Top ${WEEKLY_REFERRAL_MAX_WINNERS_DISPLAY} qualifying referrers win a reward. Resets when the admin ends the week.</div>
+
+                <div class="card" style="padding:14px; margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                        <span class="muted" style="font-size:12px;">Your referrals this week</span>
+                        <span style="font-family:var(--font-display); font-weight:700; font-size:22px; color:${qualified ? 'var(--success)' : 'var(--refer-hue)'};">${mine}<span class="muted" style="font-size:13px; font-weight:400;"> / ${need}</span></span>
+                    </div>
+                    <div style="height:8px; border-radius:5px; background:var(--surface-raised); margin-top:10px; overflow:hidden;">
+                        <div style="height:100%; width:${pct}%; border-radius:5px; background:${qualified ? 'var(--success)' : 'var(--refer-hue)'}; transition:width 0.4s ease;"></div>
+                    </div>
+                    <div style="margin-top:10px; font-size:12.5px; color:${qualified ? 'var(--success)' : 'var(--pending)'};">
+                        ${qualified ? '✅ You currently qualify for this week\'s reward!' : `⏳ ${need - mine} more referral${need - mine === 1 ? '' : 's'} to qualify.`}
+                    </div>
+                </div>
+
+                <div class="muted" style="font-size:11.5px; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em;">This week's top referrers</div>
+                <div id="wc-modal-body">
+                    <div class="skel" style="height:14px; width:70%; margin:10px 0;"></div>
+                    <div class="skel" style="height:14px; width:50%; margin:10px 0;"></div>
+                </div>
+            </div>
+        </div>`;
+
+    const body = document.getElementById('wc-modal-body');
+    const r = await apiGet('data?type=weeklyContest');
+    if (!body) return; // modal closed before this resolved
+    if (!r.ok || !r.top?.length) {
+        body.innerHTML = `<div class="muted" style="text-align:center; padding:16px 0;">No referrals yet this week — be the first!</div>`;
+        return;
+    }
+    body.innerHTML = r.top.map((p, i) => {
+        const eligible = i < WEEKLY_REFERRAL_MAX_WINNERS_DISPLAY && p.weeklyReferralCount >= need;
+        return `
+        <div class="lb-row" style="${i < r.top.length - 1 ? 'border-bottom:0.5px solid var(--border);' : ''}">
+            <div class="lb-rank-num">${eligible ? '🏆' : i + 1}</div>
+            <div style="width:30px; height:30px; border-radius:50%; background:var(--surface-raised); color:var(--ink-faint); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px;">${esc((p.firstName || '?')[0].toUpperCase())}</div>
+            <div style="flex:1; font-size:13.5px; font-weight:500;">${esc(p.telegramUsername ? '@' + p.telegramUsername : (p.firstName || 'User'))}</div>
+            <div style="font-size:12.5px; color:var(--ink-muted); font-family:var(--font-display);">${p.weeklyReferralCount} refs</div>
+        </div>`;
+    }).join('');
+}
+
+// ⚠️ CHANGED — Display-only mirror of lib/constants.js's SPIN_FREE_COOLDOWN_HOURS
+// (was SPIN_DAILY_FREE, a daily count — now a rolling cooldown).
+const SPIN_FREE_COOLDOWN_HOURS_DISPLAY = 2;
+const SPIN_SEGMENTS_DISPLAY = [100, 10, 20, 30, 40, 50, 60, 80];
+const SPIN_WHEEL_GRADIENT = 'conic-gradient(from 0deg, #2F5A40 0deg 45deg, #8A6D2B 45deg 90deg, #4E7355 90deg 135deg, #234632 135deg 180deg, #8A6D2B 180deg 225deg, #4E7355 225deg 270deg, #2F5A40 270deg 315deg, #7A5F22 315deg 360deg)';
+
+// ⚠️ NEW — how many ms remain before the next free spin is available, based
+// on u.lastFreeSpinAt (absent/null = never spun free before = available now).
+function spinCooldownMsRemaining(u) {
+    // ⚠️ CHANGED — one spin per 2h TOTAL (free or bonus), so use the latest of both timestamps
+    const lastMs = Math.max(u.lastFreeSpinAt ? new Date(u.lastFreeSpinAt).getTime() : 0, u.lastSpinAt ? new Date(u.lastSpinAt).getTime() : 0);
+    if (!lastMs) return 0;
+    const elapsed = Date.now() - lastMs;
+    return Math.max(0, SPIN_FREE_COOLDOWN_HOURS_DISPLAY * 60 * 60 * 1000 - elapsed);
+}
+function fmtCooldown(ms) {
+    const totalMin = Math.ceil(ms / 60000);
+    const h = Math.floor(totalMin / 60), m = totalMin % 60;
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+async function openSpinWheelModal() {
+    // Re-opened from inside the wheel (after "Awesome"): swap content in place, no entrance replay.
+    const reopen = !!document.querySelector('#modal-root .sw-overlay');
+    const u = state.user || {};
+    const cooldownMs = spinCooldownMsRemaining(u);
+    const bonusSpins = u.bonusSpinsAvailable || 0;
+    const canSpin = cooldownMs <= 0; // ⚠️ CHANGED — bonus spins no longer skip the 2h wait
+
+    const wheelLabelsHtml = SPIN_SEGMENTS_DISPLAY.map((val, i) => {
+        const mid = i * 45 + 22.5;
+        return `<div class="spin-wheel-label" style="transform: rotate(${mid}deg) translateY(-96px) rotate(${-mid}deg);">${val}<br><span style="font-size:9px; font-weight:700;">VYRO COIN</span></div>`;
+    }).join('');
+    const pegsHtml = Array.from({ length: 16 }, (_, k) => `<i style="--k:${k}"></i>`).join('');
+    const sparklesHtml = Array.from({ length: 8 }, (_, k) => `<i style="--a:${k * 45 + (k % 2) * 12}; --d:${((k * 0.37) % 1.1).toFixed(2)}; --o:${(k % 3) * 4}px"></i>`).join('');
+
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay sw-overlay${reopen ? ' wd-static' : ''}" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.92); overflow-y:auto; text-align:center;">
+                <div class="sheet-handle"></div>
+                <div class="section-title" style="margin-bottom:2px; justify-content:center;">Spin Wheel</div>
+                <div class="muted" style="font-size:12px; margin-bottom:6px;">Spin to win VYRO COIN!</div>
+                <div class="spin-wheel-wrap" id="sw-wrap">
+                    <div class="sw-glow"></div>
+                    <div class="sw-sparkles" aria-hidden="true">${sparklesHtml}</div>
+                    <div class="spin-wheel-pointer" id="sw-pointer" aria-hidden="true"><i></i></div>
+                    <div class="sw-bezel">
+                        <div class="sw-pegs" aria-hidden="true">${pegsHtml}</div>
+                        <div class="spin-wheel" id="spin-wheel-el" style="background:${SPIN_WHEEL_GRADIENT};">
+                            <div class="sw-lines"></div><div class="sw-rim"></div>
+                            ${wheelLabelsHtml}
+                        </div>
+                    </div>
+                    <div class="sw-trail" id="sw-trail" aria-hidden="true"></div>
+                    <div class="sw-gloss" aria-hidden="true"></div>
+                    <div class="sw-badge" aria-hidden="true">${VyFX.coinFlat()}</div>
+                    <div class="sw-reveal" id="sw-reveal" aria-live="polite"></div>
+                </div>
+                <div id="spin-status" class="muted" style="font-size:12.5px; margin-bottom:14px;">
+                    ${bonusSpins > 0
+                        ? `🎁 ${bonusSpins} bonus spin${bonusSpins === 1 ? '' : 's'} saved from referrals${cooldownMs > 0 ? ` — next spin in ${fmtCooldown(cooldownMs)}` : ' — spin ready now'}`
+                        : (cooldownMs > 0 ? `Next free spin in ${fmtCooldown(cooldownMs)}` : 'Free spin ready now!')}
+                </div>
+                <button class="btn btn-primary sw-btn" id="spin-now-btn" ${canSpin ? '' : 'disabled'} style="font-size:15px; height:52px;">
+                    ${canSpin ? '🎡 Spin Now' : `⏳ Next spin in ${fmtCooldown(cooldownMs)}`}
+                </button>
+            </div>
+        </div>`;
+
+    if (canSpin) document.getElementById('spin-now-btn').onclick = (e) => performSpin(e.currentTarget);
+}
+
+// Wheel motion engine — transform-only rAF loop. Spins up immediately on tap and cruises while the
+// server call is in flight; once the server has chosen the slice, stopAt() decelerates with an
+// ease-out whose initial speed equals the cruising speed (no visible jolt) and lands exactly on it.
+function createWheelSpinner(wheelEl, trailEl, pointerEl) {
+    const VMAX = 960;              // deg/s at full speed
+    let angle = 0, v = 0, raf = 0, last = 0, mode = 'up', ease = null, done = null, lastTick = 0;
+    function apply() {
+        const t = `translate3d(0,0,0) rotate(${angle.toFixed(2)}deg)`;
+        wheelEl.style.transform = t;
+        trailEl.style.transform = t;
+        trailEl.style.opacity = (Math.min(1, v / VMAX) * 0.9).toFixed(2);
+        const tk = Math.floor(angle / 45);
+        if (tk !== lastTick) {
+            lastTick = tk;
+            if (v > 70) { pointerEl.classList.remove('tick'); void pointerEl.offsetWidth; pointerEl.classList.add('tick'); }
+        }
+    }
+    function end() { cancelAnimationFrame(raf); raf = 0; const d = done; done = null; if (d) d(); }
+    function frame(now) {
+        if (!wheelEl.isConnected) { end(); return; }          // modal was closed mid-spin
+        const dt = Math.min(0.05, (now - last) / 1000); last = now;
+        if (mode === 'up') { v = Math.min(VMAX, v + 2600 * dt); angle += v * dt; }
+        else if (mode === 'down') {
+            const t = Math.min(1, (now - ease.t0) / ease.T);
+            angle = ease.A0 + ease.D * (1 - Math.pow(1 - t, 3));
+            v = (3 * ease.D / ease.T) * Math.pow(1 - t, 2);
+            if (t >= 1) { v = 0; apply(); trailEl.style.opacity = 0; end(); return; }
+        }
+        apply();
+        raf = requestAnimationFrame(frame);
+    }
+    function decelerate(D, T) {
+        mode = 'down';
+        return new Promise((resolve) => { done = resolve; ease = { A0: angle, D, T, t0: performance.now() }; });
+    }
+    return {
+        start() { last = performance.now(); raf = requestAnimationFrame(frame); },
+        // land with slice-centre rotation `targetMod` (deg, 0-360)
+        stopAt(targetMod) {
+            const v0 = Math.max(v, 360);
+            const D0 = v0 * 4.2 / 3;
+            const D = D0 + ((((targetMod - (angle + D0)) % 360) + 360) % 360);
+            return decelerate(D, 3 * D / v0 * 1000);
+        },
+        halt() { const T = 0.9; return decelerate(Math.max(v, 60) * T / 3, T * 1000); },
+    };
+}
+
+let spinBusy = false; // blocks a second spin request while one is running (animation + server call)
+
+// Reward reveal (shown ONLY after the server confirmed the spin and the wheel has landed).
+function showSpinReveal(wrapEl, reward, onCollect) {
+    const reveal = wrapEl && wrapEl.querySelector('#sw-reveal');
+    if (!reveal) return;
+    const colors = ['#F6EBC8', '#E2D09A', '#D3BC7C', '#FFF7DA', '#A8873A', '#8CCFA2'];
+    const pieces = Array.from({ length: 34 }, (_, i) => {
+        const ang = (Math.PI * 2 * i / 34) + Math.random() * 0.4;
+        const dist = 90 + Math.random() * 110;
+        return `<i style="--c:${colors[i % colors.length]}; --dx:${(Math.cos(ang) * dist).toFixed(0)}px; --dy:${(Math.sin(ang) * dist + 50).toFixed(0)}px; --rot:${Math.round(Math.random() * 720 - 360)}deg; --dl:${(Math.random() * 0.15).toFixed(2)}s"></i>`;
+    }).join('');
+    reveal.innerHTML = `
+        <div class="sw-reveal-card">
+            <div class="sw-reveal-eyebrow">You won</div>
+            <div class="sw-reveal-amt mono-num">+${fmtWTC(reward)}</div>
+            <div class="sw-reveal-unit">VYRO COIN</div>
+            <div class="sw-reveal-usd mono-num">≈ $${wtcToUsd(reward)} USD</div>
+            <button class="btn btn-outline sw-collect" id="sw-collect" style="height:42px; color:#FFF8E1; border-color:rgba(226,208,154,0.6); background:rgba(255,255,255,0.08);">Awesome</button>
+        </div>
+        <div class="sw-confetti" aria-hidden="true">${pieces}</div>`;
+    reveal.classList.add('show');
+    document.getElementById('sw-collect').onclick = onCollect;
+}
+
+// ⚠️ CHANGED — requests a signed spinStart token, then claims the spin (unchanged server flow).
+// The wheel starts turning the instant the user taps; the reward is only revealed after the
+// server has answered ok and the wheel has landed on the slice the server chose.
+async function performSpin(btn) {
+    if (spinBusy) return;
+    spinBusy = true;
+    btn.disabled = true;
+    btn.classList.add('is-busy');
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = 'Spinning...';
+
+    const wrap = document.getElementById('sw-wrap');
+    const wheelEl = document.getElementById('spin-wheel-el');
+    const sp = createWheelSpinner(wheelEl, document.getElementById('sw-trail'), document.getElementById('sw-pointer'));
+    wrap.classList.add('is-spinning');
+    VyFX.haptic('light');
+    sp.start();
+
+    const abort = async (code) => {
+        toast(errorText(code), 'error');
+        await sp.halt();
+        wrap.classList.remove('is-spinning');
+        btn.disabled = false; btn.classList.remove('is-busy'); btn.innerHTML = originalHtml;
+        spinBusy = false;
+    };
+
+    try {
+        const startRes = await apiPost('earn', { action: 'spinStart' });
+        if (!startRes.ok) return await abort(startRes.error);
+
+        const r = await apiPost('earn', { action: 'spin', startTime: startRes.startTime, signature: startRes.signature });
+        if (!r.ok) return await abort(r.error);
+
+        const mid = r.segmentIndex * 45 + 22.5;
+        const jitter = (Math.random() - 0.5) * 24;              // stays well inside the 45° slice
+        await sp.stopAt((((360 - mid + jitter) % 360) + 360) % 360);
+        wrap.classList.remove('is-spinning');
+        btn.classList.remove('is-busy'); btn.innerHTML = '✓ Spin complete';
+
+        toast(`🎉 You won ${r.reward} VYRO COIN!`, 'success');
+        VyFX.haptic('success');
+        const stillOpen = !!document.getElementById('spin-wheel-el');
+        const refresh = (async () => {
+            try { await refreshUser(); } catch (e) {}
+            if (state.activeTab === 'home') renderHome(); else if (state.activeTab === 'profile') renderProfileTab();
+        })();
+        if (stillOpen) {
+            // re-render the modal (fresh cooldown / spin counts) only when the user taps "Awesome"
+            showSpinReveal(wrap, r.reward, async () => { await refresh; if (document.getElementById('sw-wrap')) openSpinWheelModal(); });
+        }
+        await refresh;
+    } catch (e) {
+        wrap.classList.remove('is-spinning');
+        btn.disabled = false; btn.classList.remove('is-busy'); btn.innerHTML = originalHtml;
+    } finally {
+        spinBusy = false;
+    }
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROFILE — full page in the dock's Profile slot (replaces the old small modal).
+// Display-only: every number comes from state.user (already loaded) plus the
+// existing withdraw?action=history endpoint for the withdrawn-total tile. All
+// actions reuse the existing handlers (withdraw / history / promo / language /
+// leaderboard / contest / channel links) — no backend or logic changes.
+// ══════════════════════════════════════════════════════════════
+function openProfileModal() { switchTab('profile'); } // kept: Home's level pill still calls this
+
+const PF_ICON = (d, w = 1.8) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const PF_ICONS = {
+    withdraw: '<path d="M12 4v11M7.5 10.8L12 15.3l4.5-4.5M5 20h14"/>',
+    history:  '<path d="M3.5 12a8.5 8.5 0 108.5-8.5A8.6 8.6 0 005.9 6"/><path d="M3.5 4v3.5H7M12 7.5V12l3 2"/>',
+    redeem:   '<path d="M20 12v8.5H4V12M2.5 7.5h19V12h-19zM12 7.5v13M12 7.5S10.8 3.5 8 3.5a2 2 0 000 4M12 7.5s1.2-4 4-4a2 2 0 010 4"/>',
+    id:       '<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.5 1.8-2.2 3.2-2.2s2.6.7 3.2 2.2M14.5 10h3.5M14.5 13.5H18"/>',
+    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    globe:    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/>',
+    channel:  '<path d="M21.5 2.5L10.5 13.5M21.5 2.5l-7 19-4-8.5-8.5-4 19.5-6.5z"/>',
+    pay:      '<circle cx="12" cy="12" r="9"/><path d="M12 6.5v11M15 9a3 3 0 00-3-1h0a2.5 2.5 0 000 5h1a2.5 2.5 0 010 5h0a3 3 0 01-3-1"/>',
+    people:   '<circle cx="9" cy="8" r="3.6"/><path d="M2.8 20v-1.4a4.6 4.6 0 014.6-4.6h3.2a4.6 4.6 0 014.6 4.6V20"/><circle cx="17.6" cy="9" r="2.6"/><path d="M21.6 19.4v-1a3.6 3.6 0 00-2.4-3.4"/>',
+    trophy:   '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM17 6h2a2 2 0 010 4h-2M7 6H5a2 2 0 000 4h2"/>',
+    medal:    '<circle cx="12" cy="15" r="6"/><path d="M9 10L7 2M15 10l2-8M10 15.5l1.3 1.3L15 13.5"/>',
+    task:     '<rect x="4.5" y="3.5" width="15" height="17.5" rx="3"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/>',
+    spark:    '<path d="M12 3l2.1 5.9L20 11l-5.9 2.1L12 19l-2.1-5.9L4 11l5.9-2.1L12 3z"/>',
+    coins:    '<ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/>',
+    crown:    '<path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8z"/>',
+    copy:     '<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 017.5 4H15"/>',
+    chev:     '<path d="M9 18l6-6-6-6"/>',
+    ext:      '<path d="M14 4h6v6M20 4l-8.5 8.5M18 14v4.5A1.5 1.5 0 0116.5 20h-11A1.5 1.5 0 014 18.5v-11A1.5 1.5 0 015.5 6H10"/>',
+};
+
+// Large faint watermark glyphs for the profile cards (decorative only)
+const PF_WM = {
+    withdraw: '<path d="M26 6h12v26h12L32 52 14 32h12z"/><rect x="12" y="56" width="40" height="5" rx="2.5"/>',
+    history:  '<path fill-rule="evenodd" d="M32 6a26 26 0 100 52 26 26 0 000-52zm-3 10h6v14l10 6-3 5-13-8V16z"/>',
+    redeem:   '<path d="M8 26h48v10H8zM12 38h40v18a3 3 0 01-3 3H15a3 3 0 01-3-3V38z"/><path d="M29 26h6v33h-6z" opacity=".55"/><path d="M32 26c-8 0-15-4-13-10 2-5 9-4 13 10zm0 0c8 0 15-4 13-10-2-5-9-4-13 10z"/>',
+    id:       '<path fill-rule="evenodd" d="M8 12h48a4 4 0 014 4v32a4 4 0 01-4 4H8a4 4 0 01-4-4V16a4 4 0 014-4zm14 10a7 7 0 100 14 7 7 0 000-14zM34 22h18v4H34zm0 9h14v4H34zM12 46c1-6 5-8 10-8s9 2 10 8z"/>',
+    globe:    '<path fill-rule="evenodd" d="M32 6a26 26 0 100 52 26 26 0 000-52zm0 6c-5 5-8 12-8 20s3 15 8 20c5-5 8-12 8-20s-3-15-8-20z"/>',
+    channel:  '<path d="M60 4L4 26l16 6 6 20 8-12 14 10L60 4z"/><path d="M20 32l30-20-24 26-2 14z" fill="#fff" opacity=".6"/>',
+    pay:      '<path d="M10 18a6 6 0 016-6h28l-2 8H16a2 2 0 000 4h34a6 6 0 016 6v22a6 6 0 01-6 6H16a6 6 0 01-6-6V18z"/><circle cx="46" cy="40" r="4" fill="#fff"/>',
+    people:   '<circle cx="24" cy="20" r="9"/><path d="M6 52c0-10 8-16 18-16s18 6 18 16z"/><circle cx="46" cy="24" r="7" opacity=".7"/><path d="M44 38c9 0 16 5 16 14H48c0-6-1.5-10-4-14z" opacity=".7"/>',
+    trophy:   '<path d="M6 20l12 10 14-18 14 18 12-10-5 28H11L6 20z"/><rect x="11" y="50" width="42" height="6" rx="3"/>',
+    medal:    '<circle cx="32" cy="40" r="17"/><path d="M16 4h10l7 20h-9zM48 4H38l-7 20h9z" opacity=".7"/>',
+};
+
+function pfRow({ id, icon, gold, title, sub, end }) {
+    const tail = end || `<svg class="pf-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PF_ICONS.chev}</svg>`;
+    return `
+        <button class="pf-row" id="${id}">
+            <span class="pf-ico${gold ? ' gold' : ''}">${PF_ICON(PF_ICONS[icon])}</span>
+            <span class="pf-row-body"><span class="pf-row-title">${title}</span><span class="pf-row-sub">${sub}</span></span>
+            ${PF_WM[icon] ? `<svg class="pf-wm" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">${PF_WM[icon]}</svg>` : ''}
+            ${tail}
+        </button>`;
+}
+
+function pfTile({ icon, label, value, sub, valueId, gold }) {
+    return `
+        <div class="pf-tile${gold ? ' gold' : ''}">
+            <span class="pf-tile-ico">${PF_ICON(PF_ICONS[icon], 1.9)}</span>
+            <div class="pf-tile-val mono-num" ${valueId ? `id="${valueId}"` : ''}>${value}</div>
+            <div class="pf-tile-label">${label}</div>
+            ${sub ? `<div class="pf-tile-sub mono-num">${sub}</div>` : ''}
+        </div>`;
+}
+
+function renderProfileTab() {
+    const root = document.getElementById('tab-content');
+    const u = state.user || {};
+    const bal = u.wtcBalance || 0;
+    const name = FIRST_NAME || u.firstName || 'User';
+    const handle = USERNAME !== 'N/A' ? USERNAME : (u.telegramUsername && u.telegramUsername !== 'N/A' ? u.telegramUsername : '');
+    // Same cosmetic level maths as Home (every 5,000 VYRO COIN = +1 level; gates nothing).
+    const levelTier = Math.max(1, Math.floor(bal / 5000) + 1);
+    const levelProgress = (bal % 5000) / 5000;
+    const toNext = 5000 - (bal % 5000);
+    const enter = root.dataset.enter === '1'; root.dataset.enter = '0';
+    root.classList.toggle('no-enter', !enter);
+
+    const copyEnd = `<span class="pf-end-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${PF_ICONS.copy}</svg></span>`;
+    const extEnd = `<svg class="pf-chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PF_ICONS.ext}</svg>`;
+
+    root.innerHTML = `
+        <div class="section-pad pf-page">
+            <section class="pf-hero anim-in" aria-label="Profile">
+                <div class="pf-hero-glow" aria-hidden="true"></div>
+                <div class="pf-avatar-ring">${avatarHtml(name, 88)}<span class="pf-avatar-badge" aria-hidden="true">${PF_ICON(PF_ICONS.crown, 2).replace('width="22" height="22"', 'width="13" height="13"')}</span></div>
+                <h1 class="pf-name" translate="no">${esc(name)}</h1>
+                <div class="pf-handle" translate="no">${handle ? '@' + esc(handle) : 'ID ' + esc(USER_ID)}</div>
+                <div class="pf-level" id="pf-level" role="img" aria-label="Level ${levelTier}">
+                    <div class="pf-level-top">
+                        <span class="pf-level-pill">${PF_ICON(PF_ICONS.crown, 2).replace('width="22" height="22"', 'width="13" height="13"')}Level ${levelTier}</span>
+                        <span class="pf-level-next mono-num">${fmtWTC(toNext)} to Level ${levelTier + 1}</span>
+                    </div>
+                    <div class="pf-level-track"><i style="--p:${levelProgress.toFixed(3)}"></i></div>
+                </div>
+            </section>
+
+            <section class="pf-balance anim-in-2" aria-label="VYRO COIN Balance">
+                <div class="pf-balance-sheen" aria-hidden="true"></div>
+                <div class="pf-balance-main">
+                    <div class="pf-balance-eyebrow">VYRO COIN Balance</div>
+                    <div class="pf-balance-amt mono-num" id="pf-balance-num">${fmtWTC(enter ? 0 : bal)}</div>
+                    <div class="pf-balance-usd mono-num">≈ $${wtcToUsd(bal)} USD</div>
+                </div>
+                <button class="pf-cta" id="pf-withdraw">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PF_ICONS.withdraw}</svg>
+                    <span>Withdraw</span>
+                </button>
+            </section>
+
+            <div class="pf-grid anim-in-3">
+                ${pfTile({ icon: 'coins', label: 'Lifetime earned', value: fmtWTC(u.lifetimeWtcEarned), sub: '≈ $' + wtcToUsd(u.lifetimeWtcEarned || 0) })}
+                ${pfTile({ icon: 'withdraw', label: 'Total withdrawn', value: '<i class="skel pf-skel"></i>', valueId: 'pf-withdrawn', gold: true })}
+            </div>
+
+            <div class="pf-section-head anim-in-4"><span>Wallet</span></div>
+            <div class="pf-list anim-in-4">
+                ${pfRow({ id: 'pf-go-withdraw', icon: 'withdraw', title: 'Withdraw', sub: 'Cash out your VYRO COIN' })}
+                ${pfRow({ id: 'pf-go-history', icon: 'history', gold: true, title: 'Withdraw History', sub: 'Track every request' })}
+                ${pfRow({ id: 'pf-go-redeem', icon: 'redeem', title: 'Redeem', sub: 'Enter a promo code' })}
+            </div>
+
+            <div class="pf-section-head anim-in-5"><span>Account</span></div>
+            <div class="pf-list anim-in-5">
+                ${pfRow({ id: 'pf-copy-id', icon: 'id', title: 'Ledger ID', sub: `<span class="mono-num" translate="no">${esc(USER_ID)}</span>`, end: copyEnd })}
+                ${pfRow({ id: 'pf-go-lang', icon: 'globe', gold: true, title: 'Language', sub: 'Choose your language' })}
+            </div>
+
+            <div class="pf-section-head anim-in-5"><span>Community</span></div>
+            <div class="pf-list anim-in-5">
+                ${pfRow({ id: 'pf-go-official', icon: 'channel', gold: true, title: 'Official Channel', sub: 'Join our channel', end: extEnd })}
+                ${pfRow({ id: 'pf-go-community', icon: 'people', title: 'Community', sub: 'Chat with other members', end: extEnd })}
+                ${pfRow({ id: 'pf-go-pay', icon: 'pay', gold: true, title: 'Payment Channel', sub: 'Latest payment proof', end: extEnd })}
+                ${pfRow({ id: 'pf-go-board', icon: 'trophy', title: 'Leaderboard', sub: 'Top earners ranking' })}
+                ${pfRow({ id: 'pf-go-contest', icon: 'medal', gold: true, title: 'Weekly Contest', sub: 'Win exciting rewards' })}
+            </div>
+        </div>`;
+
+    const $ = (id) => document.getElementById(id);
+    const balEl = $('pf-balance-num');
+    VyFX.fitNumber(balEl, 40, 24);
+    if (enter && bal > 0) animateCountUp(balEl, 0, bal, 1100); else balEl.textContent = fmtWTC(bal);
+
+    $('pf-withdraw').onclick = openWithdrawModal;
+    $('pf-go-withdraw').onclick = openWithdrawModal;
+    $('pf-go-history').onclick = openHistoryModal;
+    $('pf-go-redeem').onclick = openPromoModal;
+    $('pf-go-lang').onclick = openLanguageModal;
+    $('pf-copy-id').onclick = () => { navigator.clipboard.writeText(String(USER_ID)); toast('Ledger ID copied!', 'success'); VyFX.haptic('success'); };
+    $('pf-go-official').onclick = () => window.open(OFFICIAL_CHANNEL_URL, '_blank');
+    $('pf-go-community').onclick = () => window.open(COMMUNITY_GROUP_URL, '_blank');
+    $('pf-go-pay').onclick = () => window.open(PAYMENT_PROOF_GROUP_URL, '_blank');
+    $('pf-go-board').onclick = openLeaderboardModal;
+    $('pf-go-contest').onclick = openWeeklyContestModal;
+    VyFX.refresh();
+
+    // Withdrawn total: sums the user's approved requests from the existing history
+    // endpoint (same one the History sheet uses). Skeleton -> value, "—" on failure.
+    (async () => {
+        let text = '—';
+        try {
+            const r = await apiGet(`withdraw?action=history&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+            if (r.ok) {
+                const sum = (r.history || []).filter(h => h.status === 'approved').reduce((a, h) => a + Number(h.cashAmount ?? h.usdAmount ?? 0), 0);
+                text = '$' + sum.toFixed(2);
+            }
+        } catch (e) {}
+        const el = document.getElementById('pf-withdrawn');
+        if (!el) return; // navigated away
+        el.textContent = text;
+        el.classList.add('count-pop');
+    })();
+}
+
+// ══════════════════════════════════════════════════════════════
+// WITHDRAW MODAL — single form. User types a VYRO COIN amount, picks a method
+// (first withdrawal only; the wallet is locked afterwards), sees a live
+// "you receive" + requirements checklist, and submits. Mirrors api/withdraw.js
+// (the server is the source of truth; this is the display/validation copy).
+// ══════════════════════════════════════════════════════════════
+const WITHDRAW_METHODS_UI = {
+    binance:   { label: 'Binance UID', currency: 'USDT', placeholder: 'Enter your Binance UID',
+                 icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 3-3 3-3-3 3-3zM12 16l3 3-3 3-3-3 3-3zM2 12l3-3 3 3-3 3-3-3zM16 12l3-3 3 3-3 3-3-3z"/></svg>' },
+    tonkeeper: { label: 'Tonkeeper Address', currency: 'USDT', placeholder: 'UQ... wallet address',
+                 icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM8 10l4-4 4 4M12 6v10"/></svg>' },
+};
+
+function calcNetUsdDisplay(wtc) {
+    const gross = wtc / WTC_PER_USD_DISPLAY;
+    const afterFirstFee = gross * (1 - WITHDRAW_FEE_PERCENT_DISPLAY / 100);
+    const net = afterFirstFee * (1 - WITHDRAW_SECOND_FEE_PERCENT_DISPLAY / 100);
+    return net;
+}
+
+function openWithdrawModal() {
+    let method = 'binance';
+    let status = null;       // full GET ?action=status response
+    let loadFailed = false;
+    let withdrawalsOpen = true;
+
+    function renderClosed() {
+        document.getElementById('modal-root').innerHTML = `
+            <div class="overlay" onclick="if(event.target===this)this.remove()">
+                <div class="sheet anim-in" style="position:relative; overflow:hidden;">
+                    <div class="jg-glow" style="opacity:0.5;"></div>
+                    <div class="sheet-handle" style="position:relative; z-index:1;"></div>
+                    <div style="position:relative; z-index:1; text-align:center; padding:12px 4px 4px;">
+                        <div style="font-size:34px; margin-bottom:10px;">🔒</div>
+                        <div class="section-title" style="margin-bottom:8px;">Withdrawals are closed</div>
+                        <div class="muted" style="font-size:13px; line-height:1.6; margin-bottom:20px;">New withdraw requests aren't being accepted right now. Any request you already submitted before this will still be reviewed and paid normally.</div>
+                        <button class="btn btn-outline" id="wd-closed-ok" style="width:100%;">Close</button>
+                    </div>
+                </div>
+            </div>`;
+        const okBtn = document.getElementById('wd-closed-ok');
+        if (okBtn) okBtn.onclick = () => { document.getElementById('modal-root').innerHTML = ''; };
+    }
+
+    // ⚠️ NEW (big update) — promised payout window (server value wins, constants are the fallback)
+    function procHours() {
+        return status?.processingHours || { min: WITHDRAW_PROCESS_MIN_HOURS_DISPLAY, max: WITHDRAW_PROCESS_MAX_HOURS_DISPLAY };
+    }
+
+    // ⚠️ NEW (big update) — "double-check your wallet" step shown before EVERY
+    // withdrawal. Layered on document.body (not modal-root) so the withdraw form
+    // underneath keeps everything the user typed if they go back to edit.
+    function confirmWallet(methodKey, details, wtc) {
+        return new Promise((resolve) => {
+            document.getElementById('wd-confirm-layer')?.remove();
+            const layer = document.createElement('div');
+            layer.id = 'wd-confirm-layer';
+            layer.className = 'overlay';
+            layer.style.zIndex = '120';
+            layer.style.alignItems = 'center';
+            layer.innerHTML = `
+                <div class="sheet anim-in" style="border-radius:18px; padding:22px 18px 18px; max-height:calc(var(--ovh, 100vh) * 0.9); overflow-y:auto;">
+                    <div style="text-align:center; font-size:34px; margin-bottom:6px;">🔎</div>
+                    <div class="section-title" style="justify-content:center; margin-bottom:6px;">Double-check your wallet</div>
+                    <div class="muted" style="font-size:12.5px; line-height:1.6; text-align:center; margin-bottom:14px;">Your money will be sent to the address below. Check every character — payments sent to a wrong address cannot be recovered.</div>
+                    <div class="field-label" style="margin-top:0;">Method</div>
+                    <div style="font-weight:600; font-size:14px; margin-bottom:10px;">${WITHDRAW_METHODS_UI[methodKey]?.label || esc(methodKey)}</div>
+                    <div class="field-label" style="margin-top:0;">Address / UID</div>
+                    <div class="wd-confirm-addr mono-num" translate="no">${esc(details)}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+                        <span class="muted" style="font-size:13px;">You receive</span>
+                        <span class="mono-num" style="font-size:17px; font-weight:700; color:var(--money);">$${calcNetUsdDisplay(wtc).toFixed(4)}</span>
+                    </div>
+                    <div style="font-size:11.5px; margin-top:6px; color:var(--pending);">⏱ Withdrawals are paid within ${procHours().min}–${procHours().max} hours after you submit.</div>
+                    <label style="display:flex; align-items:flex-start; gap:10px; margin:14px 0; font-size:13px; color:var(--ink-muted);">
+                        <input type="checkbox" id="wd-confirm-box" style="margin-top:3px;"> <span>I have carefully checked my wallet address and it is correct.</span>
+                    </label>
+                    <button class="btn btn-money" id="wd-confirm-go" disabled style="margin-bottom:10px;">Confirm & Withdraw</button>
+                    <button class="btn btn-outline" id="wd-confirm-back">Go back</button>
+                </div>`;
+            document.body.appendChild(layer);
+            const box = layer.querySelector('#wd-confirm-box');
+            const go = layer.querySelector('#wd-confirm-go');
+            const finish = (ok) => { layer.remove(); resolve(ok); };
+            box.onchange = () => { go.disabled = !box.checked; };
+            go.onclick = () => finish(true);
+            layer.querySelector('#wd-confirm-back').onclick = () => finish(false);
+            layer.onclick = (e) => { if (e.target === layer) finish(false); };
+        });
+    }
+
+    function reqLine(label, met, detail) {
+        return `
+        <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; margin-bottom:6px; color:${met ? 'var(--success)' : 'var(--pending)'};">
+            <span>${met ? '✅' : '⏳'}</span><span>${label}${detail ? ` <span class="muted" style="color:inherit; opacity:0.85;">${detail}</span>` : ''}</span>
+        </div>`;
+    }
+
+    function render() {
+        // ⚠️ FIX — render() is called once synchronously (see the bottom of
+        // openWithdrawModal) BEFORE loadStatus() has resolved, so `status`
+        // is still null on that first call. Every field below reads from
+        // `status` unconditionally (status.lockedWallet, status.referralRequirement,
+        // etc.) with no optional-chaining, so without this guard the very
+        // first render() would throw immediately. Shows a lightweight
+        // skeleton instead; loadStatus() calls render() again once real
+        // data arrives.
+        if (!status) {
+            document.getElementById('modal-root').innerHTML = `
+                <div class="overlay" onclick="if(event.target===this)this.remove()">
+                    <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.88);">
+                        <div class="sheet-handle"></div>
+                        <div class="section-title" style="margin-bottom:14px;">Withdraw VYRO COIN</div>
+                        <div class="skel" style="height:56px; width:100%; margin-bottom:14px;"></div>
+                        <div class="skel" style="height:44px; width:100%; margin-bottom:14px;"></div>
+                        <div class="skel" style="height:44px; width:100%; margin-bottom:14px;"></div>
+                        <div class="skel" style="height:48px; width:100%;"></div>
+                    </div>
+                </div>`;
+            return;
+        }
+        const u = state.user || {};
+        const wtcBalance = u.wtcBalance || 0;
+        const m = WITHDRAW_METHODS_UI[method];
+
+        // Re-renders (gateway switch, status refresh) happen inside an already-open sheet:
+        // skip the entrance animation + overlay fade (that replay was the visible "glitch"),
+        // and keep what the user already typed.
+        const modalRoot = document.getElementById('modal-root');
+        const alreadyOpen = !!modalRoot.querySelector('.overlay .sheet'); // includes the loading skeleton
+        const keepAmount = alreadyOpen ? (document.getElementById('wd-amount')?.value || '') : '';
+        const keepDetails = alreadyOpen ? (document.getElementById('wd-details')?.value || '') : '';
+        const keepScroll = alreadyOpen ? (modalRoot.querySelector('.sheet > div[style*="overflow-y"]')?.scrollTop || 0) : 0;
+
+        modalRoot.innerHTML = `
+            <div class="overlay${alreadyOpen ? ' wd-static' : ''}" onclick="if(event.target===this)this.remove()">
+                <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.88); display:flex; flex-direction:column; position:relative; overflow:hidden;">
+                    <div class="jg-glow" style="opacity:0.5;"></div>
+                    <div class="sheet-handle" style="position:relative; z-index:1;"></div>
+                    <div class="section-title" style="margin-bottom:14px; position:relative; z-index:1;">Withdraw VYRO COIN</div>
+
+                    <div style="overflow-y:auto; flex:1 1 auto; min-height:0; position:relative; z-index:1; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;">
+                        ${status.lockedWallet ? `
+                            <!-- ⚠️ NEW — wallet lock (see WALLET_CHANGE_PENALTY_PERCENT,
+                                 lib/constants.js). Once a user's first withdrawal sets
+                                 this, every withdrawal after just shows it read-only —
+                                 no re-typing, no method switch. Changing it requires the
+                                 one-time admin-mediated flow (Telegram bot), not this UI. -->
+                            <div class="field-label" style="margin-top:0;">Withdrawing to</div>
+                            <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; background:var(--glass-bg); border:1px solid var(--glass-border); margin-bottom:14px;">
+                                <div style="font-size:20px;">${WITHDRAW_METHODS_UI[status.lockedWallet.method]?.icon || '💳'}</div>
+                                <div style="flex:1; min-width:0;">
+                                    <div style="font-size:12.5px; font-weight:600;">${WITHDRAW_METHODS_UI[status.lockedWallet.method]?.label || status.lockedWallet.method}</div>
+                                    <div class="muted mono-num" style="font-size:11.5px; word-break:break-all;">${status.lockedWallet.address}</div>
+                                </div>
+                            </div>
+                            <div class="muted" style="font-size:11px; margin:-8px 0 14px;">🔒 Locked to your first withdrawal — contact support in the bot if this address is wrong.</div>
+                        ` : `
+                            <div class="field-label" style="margin-top:0;">Select gateway</div>
+                            <div class="wd-gateways" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
+                                ${Object.entries(WITHDRAW_METHODS_UI).map(([key, cfg]) => `
+                                    <button class="btn ${method === key ? 'btn-primary' : 'btn-outline'}" data-method="${key}" style="display:flex; align-items:center; justify-content:center; gap:7px; height:56px; flex-direction:column; font-size:12px;">
+                                        ${cfg.icon}${cfg.label.split(' ')[0]}
+                                    </button>`).join('')}
+                            </div>
+
+                            <div class="field-label" id="wd-details-label">${m.label}</div>
+                            <input class="field-input" id="wd-details" placeholder="${m.placeholder}">
+                            <div class="wd-notice" role="note"><span class="wd-notice-ico" aria-hidden="true">⚠️</span><span class="wd-notice-txt">This becomes your permanent withdrawal wallet — double-check it before submitting.</span></div>
+                        `}
+
+                        <div class="field-label">Amount (VYRO COIN) — minimum ${fmtWTC(MIN_WITHDRAW_WTC)}</div>
+                        <div style="display:flex; gap:8px;">
+                            <input class="field-input" id="wd-amount" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="done" placeholder="${MIN_WITHDRAW_WTC}" style="flex:1;">
+                            <button class="btn btn-outline" id="wd-max" style="width:auto; padding:0 16px;">MAX</button>
+                        </div>
+                        <div class="muted wd-hint">${fmtWTC(WTC_PER_USD_DISPLAY)} VYRO COIN = 1 USDT · Balance: <span class="mono-num">${fmtWTC(wtcBalance)} VYRO COIN</span></div>
+
+                        ${(status && status.withdrawRequirements.accountAgeRequiredHours <= 0 && status.referralRequirement.isFreePhase) ? '' : `<div class="card" style="margin-top:14px; padding:12px 14px;">
+                            ${!status ? `<div class="muted" style="font-size:12.5px; text-align:center; padding:6px 0;">${loadFailed ? "Couldn't load — try again." : 'Loading requirements...'}</div>` : `
+                                ${status.withdrawRequirements.accountAgeRequiredHours > 0 ? reqLine(`Account at least ${status.withdrawRequirements.accountAgeRequiredHours} hours old`, status.withdrawRequirements.accountAgeMet, status.withdrawRequirements.accountAgeMet ? '' : `(${status.withdrawRequirements.accountAgeHoursRemaining}h left)`) : ''}
+                                ${status.referralRequirement.isFreePhase
+                                    ? '' // free phase: the referral line is hidden until the free withdrawals are used up
+                                    // Referrals needed scale with the AMOUNT typed (updateReceiveAndSubmit
+                                    // recomputes this live). Referrals can't be bought anymore — invite friends.
+                                    : reqLine('Valid referrals available', true, `(${status.referralRequirement.validReferralsAvailable} available, 1 per every $${status.referralRequirement.usdPerReferral})`)}
+                            `}
+                        </div>`}
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
+                            <span class="muted" style="font-size:13px;">You receive</span>
+                            <span id="wd-receive" class="mono-num" style="font-size:18px; font-weight:700; color:var(--money);">$0.0000</span>
+                        </div>
+                        <div class="muted" style="font-size:10.5px; margin-top:4px;">${WITHDRAW_SECOND_FEE_PERCENT_DISPLAY > 0 ? `Fees: ${WITHDRAW_FEE_PERCENT_DISPLAY}% + ${WITHDRAW_SECOND_FEE_PERCENT_DISPLAY}%, taken together at withdraw time.` : `Withdrawal fee: ${WITHDRAW_FEE_PERCENT_DISPLAY}%`}</div>
+                        <div style="font-size:11.5px; margin-top:8px; color:var(--pending);">⏱ Withdrawals are paid within ${procHours().min}–${procHours().max} hours after you submit.</div>
+                    </div>
+
+                    <button class="btn btn-money" style="margin-top:14px; position:relative; z-index:1;" id="wd-submit" disabled>Loading...</button>
+                    <a href="${PAYMENT_PROOF_GROUP_URL}" target="_blank" rel="noopener" id="wd-live-logs" style="display:block; text-align:center; margin-top:12px; font-size:13px; font-weight:600; color:var(--money); text-decoration:underline; position:relative; z-index:1;">View live payout logs</a>
+                </div>
+            </div>`;
+
+        if (keepAmount) document.getElementById('wd-amount').value = keepAmount;
+        if (keepDetails && document.getElementById('wd-details')) document.getElementById('wd-details').value = keepDetails;
+        if (keepScroll) { const sc = modalRoot.querySelector('.sheet > div[style*="overflow-y"]'); if (sc) sc.scrollTop = keepScroll; }
+        document.querySelectorAll('[data-method]').forEach(btn => {
+            btn.onclick = () => { if (method === btn.dataset.method) return; method = btn.dataset.method; applyMethodUI(); };
+        });
+        document.getElementById('wd-max').onclick = () => {
+            // ⚠️ NEW — for a first-time (free) withdrawal, MAX shouldn't
+            // fill in more than the free cap, or it'd just disable the
+            // submit button immediately.
+            const cap = (status?.referralRequirement?.isFreePhase)
+                ? Math.min(wtcBalance, status.referralRequirement.freeWithdrawMaxWtc)
+                : wtcBalance;
+            document.getElementById('wd-amount').value = Math.floor(cap);
+            updateReceiveAndSubmit();
+        };
+        document.getElementById('wd-amount').oninput = updateReceiveAndSubmit;
+        document.getElementById('wd-submit').onclick = submitWithdraw;
+        document.getElementById('wd-live-logs').onclick = (e) => { e.preventDefault(); const tg = window.Telegram?.WebApp; if (tg?.openTelegramLink) tg.openTelegramLink(PAYMENT_PROOF_GROUP_URL); else window.open(PAYMENT_PROOF_GROUP_URL, '_blank'); };
+        updateReceiveAndSubmit();
+    }
+
+    // Gateway switch: patch only what differs (button highlight, label, placeholder, address box).
+    // It used to call render(), which rebuilt the entire sheet -- destroying the focused input,
+    // collapsing the keyboard (viewport resize = flash) and wiping what the user had typed.
+    function applyMethodUI() {
+        const cfg = WITHDRAW_METHODS_UI[method];
+        if (!cfg) return;
+        document.querySelectorAll('[data-method]').forEach(b => {
+            const on = b.dataset.method === method;
+            b.classList.toggle('btn-primary', on);
+            b.classList.toggle('btn-outline', !on);
+        });
+        const lab = document.getElementById('wd-details-label');
+        if (lab) lab.textContent = cfg.label;
+        const det = document.getElementById('wd-details');
+        if (det) { det.placeholder = cfg.placeholder; det.value = ''; }
+        updateReceiveAndSubmit();
+    }
+
+    function updateReceiveAndSubmit() {
+        const amountEl = document.getElementById('wd-amount');
+        const btn = document.getElementById('wd-submit');
+        const receiveEl = document.getElementById('wd-receive');
+        if (!amountEl || !btn) return;
+
+        // FIX — write to the DOM only when the text really changed: rewriting identical text on
+        // every keystroke forced needless re-layout/repaint inside the open sheet (typing flicker).
+        const setTxt = (el, t) => { if (el.textContent !== t) el.textContent = t; };
+        const wtc = Math.floor(parseFloat(amountEl.value) || 0);
+        setTxt(receiveEl, `$${calcNetUsdDisplay(wtc).toFixed(4)}`);
+
+        if (!status) { btn.disabled = true; setTxt(btn, loadFailed ? 'Retry' : 'Loading...'); return; }
+
+        const u = state.user || {};
+        const wtcBalance = u.wtcBalance || 0;
+        const reqOk = status.withdrawRequirements.adsMet && status.withdrawRequirements.accountAgeMet !== false;
+        // ⚠️ CHANGED — was a flat "1 valid referral" check (status.referralRequirement.met).
+        // Now computed live from the CURRENT typed amount, same formula the
+        // server re-verifies at submit (requiredReferralsForUsd, lib/constants.js).
+        const grossUsd = wtc / WTC_PER_USD_DISPLAY;
+        const referralsNeeded = status.referralRequirement.isFreePhase
+            ? 0
+            : Math.max(1, Math.ceil(grossUsd / status.referralRequirement.usdPerReferral));
+        const refOk = status.referralRequirement.isFreePhase || status.referralRequirement.validReferralsAvailable >= referralsNeeded;
+
+        if (loadFailed) { btn.disabled = false; setTxt(btn, 'Retry'); return; }
+        if (status.withdrawPending) { btn.disabled = true; setTxt(btn, 'A request is already pending'); return; }
+        if (wtc < MIN_WITHDRAW_WTC) { btn.disabled = true; setTxt(btn, `Minimum ${fmtWTC(MIN_WITHDRAW_WTC)} VYRO COIN`); return; }
+        if (wtc > wtcBalance) { btn.disabled = true; setTxt(btn, 'Insufficient VYRO COIN balance'); return; }
+        // ⚠️ NEW — the free first withdrawal is capped; catch it client-side
+        // too so the button disables instead of letting the user submit and
+        // only then find out from the server.
+        if (status.referralRequirement.isFreePhase && wtc > status.referralRequirement.freeWithdrawMaxWtc) {
+            btn.disabled = true; setTxt(btn, `Max $${status.referralRequirement.freeWithdrawMaxUsd} (${fmtWTC(status.referralRequirement.freeWithdrawMaxWtc)} VYRO COIN) per withdrawal`); return;
+        }
+        if (!reqOk) { btn.disabled = true; setTxt(btn, 'Complete requirements above'); return; }
+        if (!refOk) {
+            btn.disabled = true;
+            setTxt(btn, `Need ${referralsNeeded} valid referral${referralsNeeded === 1 ? '' : 's'} (have ${status.referralRequirement.validReferralsAvailable})`);
+            return;
+        }
+        btn.disabled = false;
+        setTxt(btn, `Withdraw ${fmtWTC(wtc)} VYRO COIN`);
+    }
+
+    async function loadStatus() {
+        const r = await apiGet(`withdraw?action=status&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        if (!r.ok) {
+            loadFailed = true;
+            updateReceiveAndSubmit();
+            return;
+        }
+        if (r.withdrawalsOpen === false) {
+            withdrawalsOpen = false;
+            renderClosed();
+            return;
+        }
+        loadFailed = false;
+        status = r;
+        // ⚠️ NEW — if a wallet is already locked, sync the selector to it
+        // (though it won't be shown/editable — see render() below).
+        if (status.lockedWallet) method = status.lockedWallet.method;
+        render();
+    }
+
+    async function submitWithdraw() {
+        // ⚠️ CHANGED — when a wallet is already locked, there's no #wd-details
+        // input in the DOM at all (see render() above) — use the locked
+        // address directly. The server ignores/overrides this anyway (see
+        // api/withdraw.js), but sending it keeps this function simple.
+        const details = status.lockedWallet ? status.lockedWallet.address : document.getElementById('wd-details').value.trim();
+        const wtcAmount = Math.floor(parseFloat(document.getElementById('wd-amount').value) || 0);
+        if (loadFailed) { loadStatus(); return; }
+        if (!details) return toast('Please enter your address/UID.', 'error');
+        if (!status.lockedWallet && !/^[A-Za-z0-9_\-:.+\/=]{5,100}$/.test(details)) return toast(errorText('invalid_address'), 'error');
+        if (!wtcAmount) return toast('Please enter an amount.', 'error');
+
+        // ⚠️ NEW (big update) — user must look at the wallet address before money leaves.
+        const okToSend = await confirmWallet(status.lockedWallet ? status.lockedWallet.method : method, details, wtcAmount);
+        if (!okToSend) return;
+
+        const btn = document.getElementById('wd-submit');
+        btn.textContent = 'Submitting...'; btn.disabled = true;
+        const r = await apiPost('withdraw', { method, details, wtcAmount });
+        if (r.ok) {
+            toast(`Withdraw request submitted — you'll be paid within ${procHours().min}–${procHours().max} hours.`, 'success');
+            triggerBurst(btn);
+            setTimeout(() => { document.getElementById('modal-root').innerHTML = ''; }, 200);
+            await refreshUser();
+            if (state.activeTab === 'home') renderHome(); else if (state.activeTab === 'profile') renderProfileTab();
+        } else {
+            toast(r.message || errorText(r.error), 'error');
+            await loadStatus();
+        }
+    }
+
+    render();
+    loadStatus();
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROMO MODAL
+// ══════════════════════════════════════════════════════════════
+// ⚠️ Currently not called from anywhere (the inline Home promo box replaced
+// it) — kept in case a modal-style promo entry point is wanted again later
+// (e.g. from another tab). Uses the same shared redeemPromoCode() as Home,
+// so re-enabling this never risks drifting out of sync with the anti-abuse
+// ad-gate logic.
+function openPromoModal() {
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in">
+                <div class="sheet-handle"></div>
+                <div style="font-weight:600; font-size:16px; margin-bottom:4px;">Promo code</div>
+                <div class="muted" style="font-size:13px; margin-bottom:16px;">Redeem a code for extra VYRO COIN.</div>
+                <input class="field-input" id="promo-code" placeholder="Enter 6-digit code" style="text-align:center; font-family:var(--font-display); font-size:18px; letter-spacing:3px;">
+                <button class="btn btn-primary" style="margin-top:16px;" id="promo-submit">Redeem</button>
+            </div>
+        </div>`;
+    document.getElementById('promo-submit').onclick = () => redeemPromoCode(
+        document.getElementById('promo-code').value.trim(),
+        document.getElementById('promo-submit'),
+        () => {
+            setTimeout(() => { document.getElementById('modal-root').innerHTML = ''; }, 200);
+            if (state.activeTab === 'home') renderHome(); else if (state.activeTab === 'profile') renderProfileTab();
+        }
+    );
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// TASK SECTION
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// EARN — centre dock tab. A games hub: ONE slot per game, laid out in a 2-column grid so
+// more games can be appended to EARN_GAMES later (a new tile appears automatically).
+// Games live in /games/*.html and run in a fullscreen iframe (see openEarnGame).
+// ══════════════════════════════════════════════════════════════
+const EARN_GAMES = [
+    {
+        id: 'mini-bot', name: 'Mini Bot', tagline: 'Shoot, dodge & beat the boss', src: 'games/mini-bot.html',
+        badge: 'Up to 200 VYRO COIN', status: true,
+        art: `<svg viewBox="0 0 320 228" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="mb-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f1048"/><stop offset=".6" stop-color="#120a30"/><stop offset="1" stop-color="#08051a"/></linearGradient>
+              <radialGradient id="mb-n1" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#d4469f" stop-opacity=".42"/><stop offset="1" stop-color="#d4469f" stop-opacity="0"/></radialGradient>
+              <radialGradient id="mb-n2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7a45ff" stop-opacity=".5"/><stop offset="1" stop-color="#7a45ff" stop-opacity="0"/></radialGradient>
+              <radialGradient id="mb-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9d7bff" stop-opacity=".55"/><stop offset=".55" stop-color="#8df0bd" stop-opacity=".12"/><stop offset="1" stop-color="#8df0bd" stop-opacity="0"/></radialGradient>
+              <linearGradient id="mb-sl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6f0ff"/><stop offset="1" stop-color="#b79bff"/></linearGradient>
+              <linearGradient id="mb-sr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8e6bff"/><stop offset="1" stop-color="#3d2096"/></linearGradient>
+              <linearGradient id="mb-fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8ffd9"/><stop offset="1" stop-color="#8df0bd" stop-opacity="0"/></linearGradient>
+              <linearGradient id="mb-ls" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8df0bd" stop-opacity="0"/><stop offset=".7" stop-color="#8df0bd"/><stop offset="1" stop-color="#eafff3"/></linearGradient>
+              <linearGradient id="mb-ra" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7ab8"/><stop offset="1" stop-color="#7d1f66"/></linearGradient>
+              <linearGradient id="mb-rb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c87bff"/><stop offset="1" stop-color="#4a1d8c"/></linearGradient>
+            </defs>
+            <rect width="320" height="228" fill="url(#mb-bg)"/>
+            <ellipse cx="70" cy="62" rx="120" ry="76" fill="url(#mb-n1)"/>
+            <ellipse cx="262" cy="118" rx="128" ry="86" fill="url(#mb-n2)"/>
+            <g fill="#fff" opacity=".75"><circle cx="24" cy="30" r="1"/><circle cx="104" cy="22" r="1.2"/><circle cx="212" cy="30" r="1"/><circle cx="296" cy="26" r="1.3"/><circle cx="46" cy="116" r="1"/><circle cx="130" cy="64" r="1"/><circle cx="238" cy="84" r="1.2"/><circle cx="288" cy="150" r="1"/></g>
+            <g fill="#d9ccff" opacity=".5"><circle cx="78" cy="42" r=".8"/><circle cx="182" cy="16" r=".8"/><circle cx="262" cy="52" r=".8"/><circle cx="20" cy="84" r=".8"/><circle cx="196" cy="70" r=".8"/></g>
+            <circle cx="160" cy="140" r="78" fill="url(#mb-glow)"/>
+            <g fill="none" stroke-linecap="round">
+              <circle cx="160" cy="140" r="46" stroke="#b79bff" stroke-opacity=".32"/>
+              <circle class="mb-spin" cx="160" cy="140" r="72" stroke="#9d7bff" stroke-opacity=".55" stroke-dasharray="3 7"/>
+              <circle class="mb-spin-r" cx="160" cy="140" r="98" stroke="#ff7cb9" stroke-opacity=".38" stroke-dasharray="2 9"/>
+            </g>
+            <rect class="mb-laser" x="158.6" y="18" width="2.8" height="70" rx="1.4" fill="url(#mb-ls)"/>
+            <rect class="mb-laser" x="158.9" y="0" width="2.2" height="9" rx="1.1" fill="#8df0bd" opacity=".5"/>
+            <g class="mb-drift-a"><polygon points="28,70 52,58 72,70 66,96 40,100" fill="url(#mb-ra)"/><polygon points="52,58 72,70 56,76" fill="#ffc2de" opacity=".55"/></g>
+            <g class="mb-drift-b"><polygon points="246,56 272,46 292,62 280,86 254,82" fill="url(#mb-rb)"/><polygon points="272,46 292,62 276,66" fill="#e6c9ff" opacity=".5"/></g>
+            <g class="mb-drift-b"><polygon points="226,128 238,124 244,134 236,142 226,138" fill="url(#mb-ra)" opacity=".9"/></g>
+            <g class="mb-drift-a"><polygon points="86,122 96,118 102,127 95,134 86,131" fill="url(#mb-rb)" opacity=".9"/></g>
+            <g class="mb-float">
+              <path class="mb-flame" d="M150 160 Q160 206 170 160 Z" fill="url(#mb-fl)"/>
+              <path d="M160 94 L116 178 L160 160 Z" fill="url(#mb-sl)"/>
+              <path d="M160 94 L204 178 L160 160 Z" fill="url(#mb-sr)"/>
+              <path d="M160 94 L160 160" stroke="#fff" stroke-opacity=".55" stroke-width="1"/>
+              <path d="M116 178 L160 160 L204 178" fill="none" stroke="#e4d9ff" stroke-opacity=".5" stroke-width="1" stroke-linejoin="round"/>
+              <ellipse cx="160" cy="132" rx="6.5" ry="10" fill="#8df0bd"/>
+              <ellipse cx="160" cy="130" rx="2.6" ry="4.4" fill="#eafff3"/>
+            </g>
+            <path d="M0 228 L0 152 L26 170 L46 158 L72 192 L98 228 Z" fill="#0b0620" stroke="#9d7bff" stroke-opacity=".35"/>
+            <path d="M320 228 L320 142 L294 162 L274 150 L246 192 L222 228 Z" fill="#0b0620" stroke="#9d7bff" stroke-opacity=".35"/>
+        </svg>`,
+    },
+];
+
+function renderEarnTab() {
+    const root = document.getElementById('tab-content');
+    const [hero, ...rest] = EARN_GAMES;
+    const PLAY_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.52.85l11-6.8a1 1 0 0 0 0-1.7l-11-6.8A1 1 0 0 0 8 5.2z" fill="currentColor"/></svg>';
+    // Featured (first) game — full-width premium card
+    const featured = hero ? `
+        <button class="game-feature" data-game="${esc(hero.id)}" aria-label="Play ${esc(hero.name)}">
+            <span class="gf-art">
+                ${hero.art}
+                <span class="gf-stars" aria-hidden="true"></span>
+                <span class="gf-fade" aria-hidden="true"></span>
+                <span class="gf-chips">
+                    <span class="gf-chip gf-chip-reward"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7.6 8.4l4.4 8 4.4-8" fill="none" stroke="#fffdf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${esc(hero.badge)}</span>
+                    <span class="gf-chip gf-chip-hard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2L5 13.6h5.6L10 22l8.2-11.6h-5.6z" fill="currentColor"/></svg>Hard mode</span>
+                </span>
+            </span>
+            <span class="gf-body">
+                <span class="gf-head">
+                    <span class="game-name">${esc(hero.name)}</span>
+                    <span class="game-tag">${esc(hero.tagline)}</span>
+                </span>
+                <span class="gf-runs">
+                    <span class="gf-pips" data-pips="${esc(hero.id)}" aria-hidden="true"><i></i><i></i><i></i></span>
+                    ${hero.status ? '<span class="game-runs" data-runs="' + esc(hero.id) + '">&nbsp;</span>' : ''}
+                </span>
+                <span class="gf-cta" data-cta="${esc(hero.id)}"><span class="gf-cta-ico">${PLAY_ICON}</span><span class="gf-cta-txt">Play now</span><span class="gf-cta-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+            </span>
+        </button>` : '';
+    // Any further games — 2-column grid (a new EARN_GAMES entry shows up here automatically)
+    const tiles = rest.map(g => `
+        <button class="game-tile" data-game="${esc(g.id)}" aria-label="Play ${esc(g.name)}">
+            <span class="game-art">${g.art}<span class="game-badge">${esc(g.badge)}</span></span>
+            <span class="game-info">
+                <span class="game-name">${esc(g.name)}</span>
+                <span class="game-tag">${esc(g.tagline)}</span>
+                ${g.status ? '<span class="game-runs" data-runs="' + esc(g.id) + '">&nbsp;</span>' : ''}
+            </span>
+        </button>`).join('');
+    root.innerHTML = `
+        <div class="section-pad earn-wrap">
+            <div class="earn-head">
+                <div>
+                    <div class="section-title earn-title">Earn</div>
+                    <div class="muted earn-sub">Play games, win VYRO COIN</div>
+                </div>
+                <span class="earn-live"><i></i>Daily rewards</span>
+            </div>
+            ${featured}
+            <div class="game-grid">
+                ${tiles}
+                <div class="game-tile game-soon" aria-hidden="true">
+                    <span class="game-art"><span class="game-soon-plus">+</span></span>
+                    <span class="game-info"><span class="game-name">More games</span><span class="game-tag">Coming soon</span></span>
+                </div>
+            </div>
+        </div>`;
+    root.querySelectorAll('[data-game]').forEach(b => {
+        b.onclick = () => { VyFX.haptic && VyFX.haptic('light'); openEarnGame(b.dataset.game); };
+    });
+    refreshMiniBotRuns();
+}
+
+async function refreshMiniBotRuns() {
+    const el = document.querySelector('[data-runs="mini-bot"]');
+    if (!el) return;
+    const r = await apiPost('earn', { action: 'miniBotStatus' });
+    const el2 = document.querySelector('[data-runs="mini-bot"]'); // tab may have changed while loading
+    if (!el2 || !r.ok) { if (el2) el2.textContent = ''; return; }
+    el2.textContent = r.runsLeft > 0 ? `${r.runsLeft}/${r.runsMax} reward runs left today` : 'Reward limit reached today';
+    el2.classList.toggle('done', r.runsLeft <= 0);
+    // premium card extras: run pips + CTA wording (playing for fun stays possible, it just pays nothing)
+    const pips = document.querySelector('[data-pips="mini-bot"]');
+    if (pips) pips.innerHTML = Array.from({ length: r.runsMax }, (_, i) => `<i class="${i < r.runsLeft ? 'on' : ''}"></i>`).join('');
+    const cta = document.querySelector('[data-cta="mini-bot"] .gf-cta-txt');
+    if (cta) cta.textContent = r.runsLeft > 0 ? 'Play now' : 'Play for fun';
+    const card = document.querySelector('.game-feature[data-game="mini-bot"]');
+    if (card) card.classList.toggle('is-done', r.runsLeft <= 0);
+}
+
+// ── fullscreen game host ──
+// The game only REPORTS its result (postMessage). The server (earn.js › miniBotStart / miniBotClaim)
+// issues a signed run token, re-validates the result and credits the wallet — see lib/miniBot.js.
+let earnGame = null; // { frame, root, run, onMsg, onBack }
+function openEarnGame(id) {
+    const g = EARN_GAMES.find(x => x.id === id);
+    if (!g || earnGame) return;
+    const host = document.createElement('div');
+    host.className = 'game-host';
+    host.innerHTML = '<div class="game-loading">Loading…</div>';
+    const frame = document.createElement('iframe');
+    frame.className = 'game-frame';
+    frame.title = g.name;
+    frame.setAttribute('allow', 'autoplay; vibrate');
+    frame.src = g.src + '?embed=1&v=' + Date.now();
+    host.appendChild(frame);
+    document.body.appendChild(host);
+    document.documentElement.classList.add('game-open');
+
+    const post = (m) => { try { frame.contentWindow.postMessage(Object.assign({ vyrova: true }, m), location.origin); } catch (e) {} };
+    const ctx = { frame, host, run: null };
+    ctx.onMsg = async (e) => {
+        if (e.source !== frame.contentWindow || e.origin !== location.origin || !e.data || e.data.vyrova !== true) return;
+        const d = e.data;
+        if (d.type === 'run-start') {
+            ctx.run = apiPost('earn', { action: 'miniBotStart' }); // token request runs while the player flies
+        } else if (d.type === 'run-end') {
+            const coins = Math.max(0, Math.floor(Number(d.coins) || 0));
+            if (coins <= 0) return post({ type: 'claim-result', ok: true, reward: 0 });
+            const tok = ctx.run ? await ctx.run : null;
+            ctx.run = null;
+            if (!tok || !tok.ok) return post({ type: 'claim-result', ok: false, error: (tok && tok.error) || 'no_run_token' });
+            if (tok.paid === false) return post({ type: 'claim-result', ok: true, reward: 0, limitReached: true });
+            const r = await apiPost('earn', { action: 'miniBotClaim', startTime: tok.startTime, signature: tok.signature, coins, bossKilled: !!d.bossKilled, score: Math.floor(Number(d.score) || 0) });
+            if (r && r.ok && r.reward > 0) {
+                if (state.user) { state.user.wtcBalance = typeof r.balance === 'number' ? r.balance : (state.user.wtcBalance || 0) + r.reward; }
+                try { VyFX.haptic && VyFX.haptic('success'); } catch (e2) {}
+            }
+            post({ type: 'claim-result', ok: !!(r && r.ok), reward: r && r.reward, limitReached: !!(r && r.limitReached), error: r && r.error });
+        } else if (d.type === 'exit') {
+            closeEarnGame();
+        }
+    };
+    window.addEventListener('message', ctx.onMsg);
+
+    // Telegram: stop the swipe-down gesture from closing the app mid-game, dark chrome, native Back button exits the game
+    try { tg?.disableVerticalSwipes?.(); } catch (e) {}
+    try { tg?.setHeaderColor?.('#04030c'); tg?.setBackgroundColor?.('#04030c'); tg?.setBottomBarColor?.('#04030c'); } catch (e) {}
+    ctx.onBack = () => closeEarnGame();
+    try { tg?.BackButton?.show(); tg?.BackButton?.onClick(ctx.onBack); } catch (e) {}
+    earnGame = ctx;
+}
+function closeEarnGame() {
+    const ctx = earnGame; if (!ctx) return;
+    earnGame = null;
+    window.removeEventListener('message', ctx.onMsg);
+    try { tg?.BackButton?.offClick(ctx.onBack); tg?.BackButton?.hide(); } catch (e) {}
+    try { tg?.enableVerticalSwipes?.(); } catch (e) {}
+    try { tg?.setHeaderColor?.('#F4F1E6'); tg?.setBackgroundColor?.('#F4F1E6'); tg?.setBottomBarColor?.('#F4F1E6'); } catch (e) {}
+    ctx.frame.src = 'about:blank'; // stops the game loop + audio immediately
+    ctx.host.remove();
+    document.documentElement.classList.remove('game-open');
+    if (state.activeTab === 'earn') refreshMiniBotRuns();
+}
+
+async function renderTaskTab() {
+    // ⚠️ UPDATED — Daily task panel removed fully. The dedicated "✅ Verify"
+    // (channel-join) tab was removed too (per request — only the tab/button
+    // is gone; the underlying api-verify mechanism stays, since
+    // Exclusive/Partner/Earning tasks can still individually be marked
+    // API-verified from the admin panel). Task section now shows 3 tabs.
+    // Any pre-existing 'channel'-category tasks in the DB no longer show
+    // anywhere in the app — admin can still remove them via Manage Tasks →
+    // ✅ Verify in the admin panel.
+    const TASK_TABS = [
+        { id: 'daily', label: '📅 Daily' },
+        { id: 'exclusive', label: '⭐ Exclusive' },
+        { id: 'partner', label: '🤝 Partner' },
+        { id: 'earning', label: '👥 Earning' },
+    ];
+    if (!state.taskSubTab || !TASK_TABS.some(t => t.id === state.taskSubTab)) state.taskSubTab = 'daily';
+    const root = document.getElementById('tab-content');
+    root.innerHTML = `
+        <div class="section-pad" style="margin-top:18px;">
+            <div class="section-title" style="margin-bottom:14px;">Complete tasks, earn VYRO COIN</div>
+            <div class="subnav">
+                ${TASK_TABS.map(t => `<button class="subnav-btn ${state.taskSubTab === t.id ? 'active' : ''}" data-subtab="${t.id}">${t.label}</button>`).join('')}
+            </div>
+            ${state.taskSubTab === 'exclusive' ? `<button class="btn btn-outline" id="task-create-btn" style="width:100%; margin-bottom:14px; height:42px; border-color:var(--exclusive-hue); color:var(--exclusive-hue);">📋 Create Task — publish your own</button>` : ''}
+            <div style="display:flex; flex-direction:column; gap:10px;" id="task-page-list">
+                <div class="muted" style="text-align:center; padding:20px 0;">Loading...</div>
+            </div>
+        </div>`;
+
+    // Create Task button is shown ONLY inside the Exclusive sub-tab
+    const createBtn = document.getElementById('task-create-btn');
+    if (createBtn) createBtn.onclick = openCreateTaskModal;
+    root.querySelectorAll('.subnav-btn[data-subtab]').forEach(btn => {
+        btn.onclick = () => { state.taskSubTab = btn.dataset.subtab; renderTaskTab(); };
+    });
+
+    const r = await apiGet('data?type=tasks');
+    state.tasks = r.ok ? r.tasks : [];
+    const done = new Set(state.user?.completedTasks || []);
+    const listEl = document.getElementById('task-page-list');
+    if (!listEl) return; // sub-tab may have changed while this was loading
+
+    // ⚠️ A completed task is no longer shown in the list — after it vanishes
+    // with an animation this is the intended behavior, so it's filtered out
+    // right here.
+    const items = state.tasks.filter(t => !done.has(t._id) && (t.category || 'partner') === state.taskSubTab);
+
+    // Daily tab: the "Watch & Earn" card always comes first, then any daily tasks.
+    const watchCard = state.taskSubTab === 'daily' ? watchEarnCardHtml() : '';
+    if (!items.length && !watchCard) {
+        listEl.innerHTML = `<div class="muted" style="text-align:center; padding:20px 0;">No tasks in this category right now — check back later.</div>`;
+        return;
+    }
+    listEl.innerHTML = watchCard + items.map(t => taskCardHtml(t)).join('');
+    listEl.querySelectorAll('button[data-task]').forEach(btn => { btn.onclick = () => goToTask(btn.dataset.task, btn.dataset.url, btn.dataset.category, btn.dataset.verify); });
+}
+
+// ── Daily › Watch & Earn card (display only for now) ───────────────────────
+// The rewarded-ad flow (adStart / claimAdReward) is switched off on the backend and
+// there is no ad SDK in this app, so the card shows the offer + today's progress but
+// has no action yet. Edit the two numbers below to change the text; progress reads
+// user.adsWatchedToday (the existing daily-reset counter).
+const WATCH_EARN_REWARD = 15;      // VYRO COIN per ad (display)
+const WATCH_EARN_DAILY_LIMIT = 10; // ads per day (display)
+function watchEarnCardHtml() {
+    const u = state.user || {};
+    const watched = Math.max(0, Math.min(WATCH_EARN_DAILY_LIMIT, u.adsWatchedToday || 0));
+    const pct = Math.round((watched / WATCH_EARN_DAILY_LIMIT) * 100);
+    return `
+        <div class="we-card" role="group" aria-label="Watch & Earn">
+            <div class="we-head">
+                <div class="we-ico" aria-hidden="true">🎬</div>
+                <div class="we-text">
+                    <div class="we-title">Watch &amp; Earn</div>
+                    <div class="we-sub">Earn +${WATCH_EARN_REWARD} VYRO COIN per ad watched</div>
+                </div>
+            </div>
+            <div class="we-prog-row"><span>Daily Progress</span><span class="mono-num">${watched} / ${WATCH_EARN_DAILY_LIMIT} ads</span></div>
+            <div class="we-track" role="progressbar" aria-valuemin="0" aria-valuemax="${WATCH_EARN_DAILY_LIMIT}" aria-valuenow="${watched}"><i style="--p:${(pct / 100).toFixed(3)}"></i></div>
+        </div>`;
+}
+
+// meta per category: icon, badge text, and the CSS hue vars from the theme
+// (see the --daily-hue/--exclusive-hue/etc. block up top).
+const TASK_CATEGORY_META = {
+    channel:   { icon: '📢', badge: '✓ Verified', hue: 'var(--task-hue)',      hueSoft: 'var(--task-soft)' },
+    daily:     { icon: '📅', badge: 'Daily',       hue: 'var(--daily-hue)',     hueSoft: 'var(--daily-soft)' },
+    exclusive: { icon: '⭐', badge: 'Exclusive',   hue: 'var(--exclusive-hue)', hueSoft: 'var(--exclusive-soft)' },
+    partner:   { icon: '🤝', badge: 'Partner',     hue: 'var(--partner-hue)',   hueSoft: 'var(--partner-soft)' },
+    earning:   { icon: '👥', badge: 'Earning',     hue: 'var(--earning-hue)',   hueSoft: 'var(--earning-soft)' },
+};
+
+function taskCardHtml(t) {
+    const cat = t.category || 'partner';
+    const m = TASK_CATEGORY_META[cat] || TASK_CATEGORY_META.partner;
+    // ⚠️ NEW (this update) — verifyType is now independent of category (any
+    // category can be API-verified via Telegram join, not just 'channel').
+    // Falls back to the old category-based rule for tasks saved before this
+    // field existed.
+    const verifyType = t.verifyType || (cat === 'channel' ? 'api' : 'link');
+    // daily tasks priced in USDT show the USDT figure as the headline reward
+    // (with VYRO COIN as the small unit label swapped for "USDT") — the actual
+    // credited amount is still rewardWtc under the hood, this is display-only.
+    const isUsdt = t.rewardCurrency === 'usdt';
+    const rewardAmount = isUsdt ? (t.rewardUsdt ?? 0) : (t.rewardWtc || 0);
+    const rewardUnit = isUsdt ? 'USDT' : 'VYRO COIN';
+    return `
+    <div class="card task-card-big" data-task-card="${t._id}">
+        <div class="tc-icon" style="background:${m.hueSoft}; border-color:${m.hueSoft};">${m.icon}</div>
+        <div style="flex:1; min-width:0;">
+            <span class="pill" style="background:${m.hueSoft}; color:${m.hue}; margin-bottom:6px;">${m.badge}</span>
+            <div class="tc-title">${esc(t.title)}</div>
+            <button class="btn tc-go-btn" style="background:${m.hue}; box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 6px 14px ${m.hueSoft};" data-task="${t._id}" data-url="${t.url || ''}" data-category="${cat}" data-verify="${verifyType}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Start
+            </button>
+        </div>
+        <div class="tc-reward-badge">
+            <div class="tc-reward-amount" style="color:${m.hue};">+${rewardAmount}</div>
+            <div class="tc-reward-label">${rewardUnit}</div>
+        </div>
+    </div>`;
+}
+
+function goToTask(taskId, url, category, verifyType) {
+    // Open the link first
+    if (url) window.open(url, '_blank');
+
+    // Then show the claim/verify sheet — user must actively press Claim
+    const task = state.tasks.find(t => t._id === taskId);
+    // ⚠️ CHANGED (this update) — was `category === 'channel'`. Now keyed off
+    // verifyType so any category (Daily/Exclusive/Partner/Earning) can be an
+    // API-verified (Telegram join) task, not just the dedicated Verify tab.
+    const isVerified = verifyType === 'api';
+
+    // ⚠️ NEW — issue a signed taskStart token the instant the sheet opens
+    // (non-API-verified tasks only — API-verified tasks are independently
+    // verified via real Telegram membership and don't need this). Stored in a
+    // closure-scoped variable and sent along with the claim below — see
+    // handleTaskStart/handleTaskComplete in api/earn.js for why.
+    let taskToken = null;
+    if (!isVerified) {
+        apiPost('earn', { action: 'taskStart', taskId }).then(r => {
+            if (r?.ok) taskToken = { startTime: r.startTime, signature: r.signature };
+        });
+    }
+
+    document.getElementById('modal-root').innerHTML = `
+        <div class="overlay" onclick="if(event.target===this)this.remove()">
+            <div class="sheet anim-in">
+                <div class="sheet-handle"></div>
+                <div style="font-weight:600; font-size:16px; margin-bottom:6px;">${esc(task?.title || 'Task')}</div>
+                <div class="muted" style="font-size:13px; margin-bottom:18px;">
+                    ${isVerified
+                        ? 'After joining the channel/group, tap Verify below. Our server will check your membership.'
+                        : 'After completing the task above, tap Claim to receive your reward.'}
+                </div>
+                ${isVerified ? `
+                    <button class="btn btn-signal" id="task-verify-btn" style="margin-bottom:10px;">
+                        ✅ Verify Membership
+                    </button>` : `
+                    <button class="btn btn-primary" id="task-claim-btn" style="margin-bottom:10px;" disabled>
+                        🎁 Claim in 5s
+                    </button>`}
+                <button class="btn btn-outline" onclick="document.getElementById('modal-root').innerHTML=''">
+                    Cancel
+                </button>
+            </div>
+        </div>`;
+
+    const actionBtn = document.getElementById('task-verify-btn') || document.getElementById('task-claim-btn');
+    if (actionBtn) {
+        actionBtn.onclick = async () => {
+            actionBtn.disabled = true;
+            actionBtn.textContent = 'Checking...';
+            await completeTask(taskId, taskToken);
+        };
+    }
+
+    // ⚠️ Soft anti-abuse friction (matches the read→wait→claim pattern from
+    // reference apps) — link-based tasks can't be server-verified (we can't
+    // confirm someone actually visited an external site), so this at least
+    // stops instant claim-without-clicking. It's not real verification, just
+    // a reasonable minimum.
+    const claimBtn = document.getElementById('task-claim-btn');
+    if (claimBtn) {
+        let remaining = 5; // ⚠️ CHANGED — was 10s (per admin request). See TASK_MIN_WAIT_SECONDS in lib/constants.js, lowered to match.
+        const timer = setInterval(() => {
+            remaining--;
+            if (!claimBtn.isConnected) { clearInterval(timer); return; }
+            if (remaining <= 0) {
+                clearInterval(timer);
+                claimBtn.disabled = false;
+                claimBtn.innerHTML = '🎁 Claim Reward';
+            } else {
+                claimBtn.textContent = `🎁 Claim in ${remaining}s`;
+            }
+        }, 1000);
+    }
+}
+
+async function completeTask(taskId, taskToken) {
+    const r = await apiPost('earn', { action: 'taskComplete', taskId, startTime: taskToken?.startTime, signature: taskToken?.signature });
+    document.getElementById('modal-root').innerHTML = ''; // close sheet
+    if (r.ok) {
+        toast(`+${r.rewardWtc} VYRO COIN added!`, 'success');
+        triggerBurst(document.querySelector(`button[data-task="${taskId}"]`) || document.body);
+        showCongrats(`+${r.rewardWtc} VYRO COIN`, '✅', `≈ $${wtcToUsd(r.rewardWtc)} USD`);
+        await refreshUser();
+
+        // ── Vanishes the completed task's card with an animation, then refreshes the list ──
+        const refreshActiveTab = () => {
+            if (state.activeTab === 'task') renderTaskTab();
+        };
+        const card = document.querySelector(`[data-task-card="${taskId}"]`);
+        if (card) {
+            card.classList.add('task-vanish');
+            setTimeout(refreshActiveTab, 480);
+        } else {
+            refreshActiveTab();
+        }
+    }
+    else if (r.alreadyDone) { toast('You already completed this task.', 'info'); }
+    else if (r.error === 'not_member') { toast('Not a member yet — join first, then verify.', 'error'); }
+    else { toast(errorText(r.error), 'error'); }
+}
+
+// ⚠️ NEW — "Create Task" button (Task tab). A user pays TON to publish
+// their OWN task into the ⭐ Exclusive section. Payment is verified fully
+// server-side/on-chain (api/payments.js (cron=checkDeposits)) — this modal
+// only collects the task details, creates the order, and polls its
+// status; it never inserts the task itself. Structurally mirrors
+// openBuyValidReferModal (same payment-waiting screen shape), plus a
+// list screen (existing created tasks + progress) and a details-form
+// screen in front of it.
+async function openCreateTaskModal() {
+    let pollTimer = null;
+    let countdownTimer = null;
+    let closed = false;
+    let order = null;
+    const formData = { verifyType: 'api', channelUsername: '', url: '', title: '', package: '100' };
+
+    function stopTimers() {
+        if (pollTimer) clearInterval(pollTimer);
+        if (countdownTimer) clearInterval(countdownTimer);
+    }
+    function close(refreshTasks) {
+        if (closed) return;
+        closed = true;
+        stopTimers();
+        document.getElementById('modal-root').innerHTML = '';
+        if (refreshTasks && state.activeTab === 'task') renderTaskTab();
+    }
+    window.__closeCreateTask = close;
+
+    // ── screen 1: "My Created Tasks" + entry point into the form ──
+    async function renderList() {
+        document.getElementById('modal-root').innerHTML = `
+            <div class="overlay" onclick="if(event.target===this)this.remove()">
+                <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.85); overflow-y:auto;">
+                    <div class="sheet-handle"></div>
+                    <div class="section-title" style="margin-bottom:2px;">📋 Create Task</div>
+                    <div class="muted" style="font-size:12px; margin-bottom:14px;">Pay TON to submit your own task for admin review — once approved, it goes live in the ⭐ Exclusive section and other users complete it for ${TASK_CREATE_REWARD_PER_TASK_WTC_DISPLAY} VYRO COIN each.</div>
+                    <div id="ct-my-tasks">
+                        <div class="skel" style="height:50px; margin:8px 0; border-radius:12px;"></div>
+                        <div class="skel" style="height:50px; margin:8px 0; border-radius:12px;"></div>
+                    </div>
+                    <button class="btn btn-primary" id="ct-new-btn" style="width:100%; margin-top:14px;">+ Create New Task</button>
+                </div>
+            </div>`;
+        document.getElementById('ct-new-btn').onclick = renderForm;
+
+        const r = await apiGet(`payments?resource=taskcreate&action=myTasks&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        const body = document.getElementById('ct-my-tasks');
+        if (!body) return; // modal closed before this resolved
+        if (!r.ok || !r.tasks?.length) {
+            body.innerHTML = `<div class="muted" style="font-size:12.5px; text-align:center; padding:10px 0;">You haven't created any tasks yet.</div>`;
+            return;
+        }
+        body.innerHTML = r.tasks.map(t => {
+            const limit = t.limit || 0;
+            const done = t.completionCount || 0;
+            const pct = limit ? Math.min(100, Math.round((done / limit) * 100)) : 0;
+            const isDone = limit > 0 && done >= limit;
+            // ⚠️ NEW — reviewStatus (see api/bot.js "🕐 Pending Review"). A
+            // paid task sits pending_review before it's ever visible to
+            // anyone else — show that clearly instead of a misleading 0/N
+            // progress bar that looks like it's just waiting for completions.
+            if (t.reviewStatus === 'rejected') {
+                return `
+                <div class="card" style="padding:10px 12px; margin-bottom:8px; opacity:0.7;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                        <div style="font-size:13px; font-weight:600; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(t.title)}</div>
+                        <div style="font-size:11px; color:var(--error, #E14D4D); flex-shrink:0;">❌ Rejected</div>
+                    </div>
+                </div>`;
+            }
+            if (t.reviewStatus === 'pending_review' || !t.isApproved) {
+                return `
+                <div class="card" style="padding:10px 12px; margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                        <div style="font-size:13px; font-weight:600; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(t.title)}</div>
+                        <div style="font-size:11px; color:var(--pending); flex-shrink:0; white-space:nowrap;">⏳ Pending Review</div>
+                    </div>
+                </div>`;
+            }
+            return `
+            <div class="card" style="padding:10px 12px; margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    <div style="font-size:13px; font-weight:600; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(t.title)}</div>
+                    <div class="mono-num" style="font-size:12px; color:${isDone ? 'var(--success)' : 'var(--ink-muted)'}; flex-shrink:0;">${done}/${limit}${isDone ? ' ✅' : ''}</div>
+                </div>
+                <div style="height:6px; border-radius:4px; background:var(--surface-raised); margin-top:8px; overflow:hidden;">
+                    <div style="height:100%; width:${pct}%; background:${isDone ? 'var(--success)' : 'var(--exclusive-hue)'};"></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // ── screen 2: task details + package form ──
+    function captureFormFields() {
+        const ch = document.getElementById('ct-channel'); if (ch) formData.channelUsername = ch.value;
+        const url = document.getElementById('ct-url'); if (url) formData.url = url.value;
+        const title = document.getElementById('ct-title'); if (title) formData.title = title.value;
+    }
+
+    function renderForm() {
+        document.getElementById('modal-root').innerHTML = `
+            <div class="overlay" onclick="if(event.target===this)this.remove()">
+                <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.88); overflow-y:auto;">
+                    <div class="sheet-handle"></div>
+                    <div class="section-title" style="margin-bottom:14px;">📋 New Task</div>
+
+                    <div class="field-label" style="margin-top:0;">Task type</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+                        <button class="btn ${formData.verifyType === 'api' ? 'btn-primary' : 'btn-outline'}" data-vtype="api" style="height:44px; font-size:12px;">📢 Channel/Group Join</button>
+                        <button class="btn ${formData.verifyType === 'link' ? 'btn-primary' : 'btn-outline'}" data-vtype="link" style="height:44px; font-size:12px;">🔗 Link (Bot/Website)</button>
+                    </div>
+
+                    ${formData.verifyType === 'api' ? `
+                        <div class="field-label">Channel/Group username</div>
+                        <input class="field-input" id="ct-channel" placeholder="@yourchannel" value="${formData.channelUsername}">
+                        <div class="muted" style="font-size:11px; margin-top:6px; margin-bottom:10px; line-height:1.5;">⚠️ VYROVA bot must be an ADMIN in this channel/group, or membership can never be verified and users won't be able to complete this task — your TON payment is non-refundable either way.</div>
+                    ` : `
+                        <div class="field-label">Link (Telegram bot or website)</div>
+                        <input class="field-input" id="ct-url" placeholder="https://..." value="${formData.url}">
+                    `}
+
+                    <div class="field-label">Task title</div>
+                    <input class="field-input" id="ct-title" placeholder="e.g. Join our channel" maxlength="80" value="${formData.title}">
+
+                    <div class="field-label">How many people can complete it?</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px;">
+                        ${Object.entries(TASK_CREATE_PACKAGES_DISPLAY).map(([count, priceTon]) => `
+                            <button class="btn ${formData.package === count ? 'btn-primary' : 'btn-outline'}" data-pkg="${count}" style="height:52px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:12px;">
+                                <span style="font-weight:700;">${count} tasks</span>
+                                <span class="mono-num" style="font-size:11px; opacity:0.85;">${priceTon} TON</span>
+                            </button>`).join('')}
+                    </div>
+                    <div class="muted" style="font-size:11px; margin-bottom:14px;">Each completion pays the user ${TASK_CREATE_REWARD_PER_TASK_WTC_DISPLAY} VYRO COIN.</div>
+
+                    <button class="btn btn-primary" id="ct-submit" style="width:100%;">Continue to Payment</button>
+                    <button class="btn btn-outline" id="ct-back" style="width:100%; margin-top:8px;">← Back</button>
+                </div>
+            </div>`;
+
+        document.querySelectorAll('[data-vtype]').forEach(b => b.onclick = () => { captureFormFields(); formData.verifyType = b.dataset.vtype; renderForm(); });
+        document.querySelectorAll('[data-pkg]').forEach(b => b.onclick = () => { captureFormFields(); formData.package = b.dataset.pkg; renderForm(); });
+        document.getElementById('ct-back').onclick = () => { captureFormFields(); renderList(); };
+        document.getElementById('ct-submit').onclick = submitForm;
+    }
+
+    async function submitForm() {
+        captureFormFields();
+        formData.title = formData.title.trim();
+        if (!formData.title) return toast('Please enter a task title.', 'error');
+        if (formData.verifyType === 'api' && !formData.channelUsername.trim()) return toast('Please enter a channel/group username.', 'error');
+        if (formData.verifyType === 'link' && !formData.url.trim()) return toast('Please enter a link.', 'error');
+
+        const btn = document.getElementById('ct-submit');
+        btn.textContent = 'Creating order...';
+        btn.disabled = true;
+        const r = await apiPost('payments', {
+            resource: 'taskcreate',
+            action: 'create',
+            package: formData.package,
+            title: formData.title,
+            verifyType: formData.verifyType,
+            channelUsername: formData.channelUsername,
+            url: formData.url,
+        });
+        if (!document.getElementById('ct-submit')) return; // modal closed before this resolved
+        if (!r.ok) {
+            toast(errorText(r.error), 'error');
+            btn.textContent = 'Continue to Payment';
+            btn.disabled = false;
+            return;
+        }
+        order = r.order;
+        renderPay();
+    }
+
+    // ── screen 3: payment (mirrors openBuyValidReferModal's waiting screen) ──
+    function renderPay() {
+        document.getElementById('modal-root').innerHTML = `
+            <div class="overlay" onclick="if(event.target===this){window.__closeCreateTask?.();}">
+                <div class="sheet anim-in" style="max-height:calc(var(--ovh, 100vh) * 0.88); overflow-y:auto;">
+                    <div class="sheet-handle"></div>
+                    <div class="section-title" style="margin-bottom:2px;">💳 Pay to Publish</div>
+                    <div class="muted" style="font-size:12px; margin-bottom:14px;">${order.taskCount} people will be able to complete this task.</div>
+
+                    <div class="card" style="padding:14px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <span class="muted" style="font-size:12px;">Amount</span>
+                            <span class="mono-num" style="font-size:15px; font-weight:700;">${(order.amountNanoTon / 1_000_000_000).toFixed(4)} TON</span>
+                        </div>
+                        <div class="field-label" style="margin-top:0;">Send to this address</div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <div class="mono-num" style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; background:var(--surface-raised); padding:9px 10px; border-radius:8px;">${order.address}</div>
+                            <button class="btn btn-outline" id="ct-copy-addr" style="width:auto; padding:0 12px;">Copy</button>
+                        </div>
+                        <div class="field-label">Comment / Memo — <span style="color:var(--pending);">must include exactly</span></div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <div class="mono-num" style="flex:1; font-size:15px; font-weight:700; letter-spacing:1px; background:var(--surface-raised); padding:9px 10px; border-radius:8px; text-align:center;">${order.memo}</div>
+                            <button class="btn btn-outline" id="ct-copy-memo" style="width:auto; padding:0 12px;">Copy</button>
+                        </div>
+                        <div class="muted" style="font-size:11px; margin-top:8px; line-height:1.5;">⚠️ Without this exact comment, we can't tell the payment is yours and your task won't be published automatically.</div>
+                    </div>
+
+                    <button id="ct-open-tonkeeper" class="btn btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center;">Open in Tonkeeper</button>
+
+                    <div style="text-align:center; margin-top:16px;">
+                        <div id="ct-status-line" style="font-size:13px; color:var(--pending); display:flex; align-items:center; justify-content:center; gap:6px;">
+                            <span style="width:12px; height:12px; border-radius:50%; border:2px solid var(--pending); border-top-color:transparent; display:inline-block; animation:spin 0.8s linear infinite;"></span>
+                            Waiting for payment...
+                        </div>
+                        <div id="ct-countdown" class="muted" style="font-size:11.5px; margin-top:6px;"></div>
+                    </div>
+
+                    <button class="btn btn-outline" id="ct-cancel" style="width:100%; margin-top:14px; font-size:12.5px;">Cancel order</button>
+                </div>
+            </div>`;
+
+        document.getElementById('ct-copy-addr').onclick = () => { navigator.clipboard.writeText(order.address); toast('Address copied!', 'success'); };
+        document.getElementById('ct-copy-memo').onclick = () => { navigator.clipboard.writeText(order.memo); toast('Memo copied!', 'success'); };
+        document.getElementById('ct-open-tonkeeper').onclick = () => openTonkeeperLink(order.deepLink);
+        document.getElementById('ct-cancel').onclick = async () => {
+            stopTimers();
+            await apiPost('payments', { resource: 'taskcreate', action: 'cancel', orderId: order.id });
+            toast('Order cancelled.', 'info');
+            close();
+        };
+
+        startCountdown();
+        startPolling();
+    }
+
+    function startCountdown() {
+        const expiresAt = new Date(order.expiresAt).getTime();
+        const tick = () => {
+            const el = document.getElementById('ct-countdown');
+            if (!el) { clearInterval(countdownTimer); return; }
+            const msLeft = expiresAt - Date.now();
+            if (msLeft <= 0) {
+                el.textContent = 'Expired';
+                clearInterval(countdownTimer);
+                return;
+            }
+            const mm = Math.floor(msLeft / 60000);
+            const ss = Math.floor((msLeft % 60000) / 1000);
+            el.textContent = `Auto-cancels in ${mm}:${String(ss).padStart(2, '0')} if unpaid`;
+        };
+        tick();
+        countdownTimer = setInterval(tick, 1000);
+    }
+
+    function startPolling() {
+        pollTimer = setInterval(async () => {
+            const s = await apiGet(`payments?resource=taskcreate&action=status&orderId=${order.id}&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+            if (!document.getElementById('ct-status-line')) { clearInterval(pollTimer); return; } // modal closed
+            if (!s.ok) return; // transient error — just try again next tick
+            if (s.status === 'paid') {
+                stopTimers();
+                triggerBurst(document.getElementById('modal-root'));
+                showCongrats('Payment Confirmed!', '⏳');
+                toast('Payment confirmed — your task is now pending admin review.', 'success');
+                setTimeout(() => close(true), 1200);
+            } else if (s.status === 'expired') {
+                stopTimers();
+                document.getElementById('modal-root').innerHTML = `
+                    <div class="overlay" onclick="if(event.target===this)this.remove()">
+                        <div class="sheet anim-in">
+                            <div class="sheet-handle"></div>
+                            <div style="text-align:center; padding:20px 0;">
+                                <div style="font-size:34px; margin-bottom:10px;">⌛</div>
+                                <div style="font-weight:600; margin-bottom:6px;">Order expired</div>
+                                <div class="muted" style="font-size:12.5px; margin-bottom:16px;">No payment was received within ${TASK_CREATE_ORDER_EXPIRY_MIN_DISPLAY} minutes.</div>
+                                <button class="btn btn-primary" id="ct-retry" style="width:100%;">Try again</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.getElementById('ct-retry').onclick = renderForm;
+            }
+        }, 4000);
+    }
+
+    renderList();
+}
+
+// ══════════════════════════════════════════════════════════════
+// REFER SECTION
+// ══════════════════════════════════════════════════════════════
+function renderReferTab() {
+    const root = document.getElementById('tab-content');
+    const u = state.user || {};
+    const link = `${MINI_APP_BASE}?startapp=${USER_ID}`;
+    // Referral milestones (display copy — the server pays them out, see lib/referral.js).
+    const steps = [
+        { text: 'Friend joins channel + community and verifies', reward: 30 },
+        { text: 'Friend completes 5 tasks', reward: 100 },
+        { text: 'Friend completes 20 spins', reward: 100 },
+    ];
+    const copyIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 017.5 4H15"/></svg>';
+
+    root.innerHTML = `
+        <div class="section-pad" style="margin-top:6px;">
+            <div class="card refer-hero">
+                <div class="refer-orb"><div class="coin-aura"></div>${VyFX.coinFlat(72)}</div>
+                <div class="refer-eyebrow">Total bonus per friend</div>
+                <div class="refer-amount mono-num">500 <span>VYRO COIN</span></div>
+                <div class="muted mono-num" style="position:relative; font-size:12.5px; margin-bottom:10px;">≈ $${wtcToUsd(500)} USD</div>
+                <div class="pill pill-signal" style="position:relative; margin-bottom:6px;">💰 + 10% of everything they withdraw, forever</div>
+                <div class="link-box">
+                    <span>${esc(link)}</span>
+                    <button id="refer-copy-inline" aria-label="Copy Link">${copyIcon}</button>
+                </div>
+                <div class="grid-2">
+                    <button class="btn btn-primary" id="refer-share">🔗 Share Now</button>
+                    <button class="btn btn-outline" id="refer-copy">Copy Link</button>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:12px;">
+                <div class="card" style="padding:15px 16px;">
+                    <div class="muted" style="font-size:12.5px; font-weight:600; margin-bottom:6px;">Total referrals</div>
+                    <div class="big-num" style="color:var(--forest-700);">${u.referralCount || 0}</div>
+                </div>
+                <div class="card" style="padding:15px 16px;">
+                    <div class="muted" style="font-size:12.5px; font-weight:600; margin-bottom:6px;">Referral earnings</div>
+                    <div class="big-num" style="color:var(--forest-700);">${fmtWTC(u.referralWtcEarned || 0)}<span style="font-size:11px; color:var(--ink-muted); font-weight:700; font-family:var(--font-body);"> VYRO COIN</span></div>
+                    <div class="muted mono-num" style="font-size:11.5px; margin-top:2px;">≈ $${wtcToUsd(u.referralWtcEarned || 0)} USD</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:12px; padding:15px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-color:rgba(211,188,124,0.7);">
+                <div>
+                    <div style="font-size:13px; font-weight:800; margin-bottom:3px; color:var(--champagne-700);">💰 Withdrawal commission</div>
+                    <div class="muted" style="font-size:12px; line-height:1.45;">10% of every withdrawal your referrals make — for as long as they keep withdrawing.</div>
+                </div>
+                <div style="text-align:right; flex-shrink:0;">
+                    <div class="big-num" style="font-size:21px; color:var(--champagne-700);">${fmtWTC(u.referralCommissionEarned || 0)}</div>
+                    <div class="muted mono-num" style="font-size:11px;">≈ $${wtcToUsd(u.referralCommissionEarned || 0)} USD</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin:26px 0 12px;">How the bonus works</div>
+            <div class="card steps-card">
+                ${steps.map((st, i) => `
+                <div class="step-row">
+                    <div class="step-no">${i + 1}</div>
+                    <div class="step-text">${st.text}</div>
+                    <div class="step-reward">
+                        <div class="pill pill-coin mono-num">+${st.reward}</div>
+                        <div class="muted mono-num" style="font-size:10.5px; margin-top:3px;">≈ $${wtcToUsd(st.reward)}</div>
+                    </div>
+                </div>`).join('')}
+                <div class="step-row">
+                    <div class="step-no gold">💰</div>
+                    <div class="step-text">Every time they withdraw, after that</div>
+                    <div class="pill pill-signal mono-num">+10%</div>
+                </div>
+            </div>
+
+            <!-- Clarifies what makes a referral "valid" (spendable for your own withdrawals), separate
+                 from the bonus steps above: a referral only becomes VALID once the friend has done BOTH
+                 the tasks and the ads (not just one of the two). -->
+            <div class="card" style="margin-top:14px; padding:15px 16px; border-color:rgba(211,188,124,0.7);">
+                <div style="font-size:13px; font-weight:800; color:var(--champagne-700); margin-bottom:5px;">✅ When does a referral become "valid"?</div>
+                <div class="muted" style="font-size:12.5px; line-height:1.55;">
+                    A referral counts toward your withdrawals once your friend has completed both — 5 tasks and 20 ads (doesn't matter which order). Joining the channel alone, or just one of the two, isn't enough yet.
+                </div>
+            </div>
+        </div>`;
+
+    document.getElementById('refer-share').onclick = () => {
+        const text = encodeURIComponent('🎬 Join VYROVA! Complete tasks, play games & earn free VYRO COIN!');
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`, '_blank');
+    };
+    const copyLink = () => { navigator.clipboard.writeText(link); toast('Link copied!', 'success'); VyFX.haptic('success'); };
+    document.getElementById('refer-copy').onclick = copyLink;
+    document.getElementById('refer-copy-inline').onclick = copyLink;
+}
+
+// ══════════════════════════════════════════════════════════════
+// USER REFRESH / INIT
+// ══════════════════════════════════════════════════════════════
+// Season 3 — IP-already-in-use gate. Shown before the app root is ever
+// built (init() returns right after this), so there is no state.user yet
+// to protect; this is purely a "come back differently" screen.
+// ⚠️ NEW — shown when init() can't reach the backend at all (timeout on a
+// slow connection, 500, cold-start DB failure, etc.) instead of leaving the
+// user staring at the splash screen's static "92%" bar forever with no way
+// out except force-closing the app.
+function showConnectionErrorScreen() {
+    const splashEl = document.getElementById('splash');
+    if (splashEl) splashEl.remove();
+    document.getElementById('app-root').innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:32px 24px; text-align:center;">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="var(--coin)" stroke-width="2" style="margin-bottom:18px;"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            <div style="font-family:var(--font-display); font-weight:700; font-size:22px; color:var(--coin);">Connection Problem</div>
+            <div class="muted" style="font-size:13.5px; line-height:1.7; margin-top:10px; max-width:320px;">Couldn't reach the server — your connection might be slow or unstable right now.</div>
+            <button class="btn btn-primary" id="conn-retry-btn" style="max-width:340px; margin-top:22px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5"/></svg> Try again
+            </button>
+        </div>`;
+    document.getElementById('conn-retry-btn').onclick = () => { location.reload(); };
+}
+
+function showIpInUseScreen(owner) {
+    const initials = (owner?.firstName || '?').trim().charAt(0).toUpperCase();
+    const handle = owner?.telegramUsername ? `@${owner.telegramUsername}` : 'private';
+    document.getElementById('app-root').innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:32px 24px; text-align:center;">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="var(--coin)" stroke-width="2" style="margin-bottom:18px;"><path d="M5 12.5a11 11 0 0114 0M8.5 16a6 6 0 017 0"/><circle cx="12" cy="19.5" r="1.2" fill="var(--coin)" stroke="none"/></svg>
+            <div style="font-family:var(--font-display); font-weight:700; font-size:22px; color:var(--coin);">Device Already In Use</div>
+            <div class="muted" style="font-size:13.5px; line-height:1.7; margin-top:10px; max-width:320px;">This device is already linked to another account.<br>Log in with that account, or claim this device for this one below.</div>
+
+            <div class="card" style="width:100%; max-width:340px; margin-top:24px; text-align:left; display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; border-radius:50%; background:var(--coin-soft); color:var(--coin); display:flex; align-items:center; justify-content:center; font-weight:700; font-family:var(--font-display); flex-shrink:0;">${esc(initials)}</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; font-size:14px;">${esc(owner?.firstName || 'Unknown user')}</div>
+                    <div class="muted" style="font-size:12px;">${esc(handle)} · ID <span class="mono-num">${esc(owner?.id || '—')}</span></div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="ip-retry-btn" style="max-width:340px; margin-top:22px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5"/></svg> Try again
+            </button>
+            <button class="btn btn-outline" id="ip-switch-btn" style="max-width:340px; margin-top:10px;">Switch account (resets my balance)</button>
+            <div class="muted" style="font-size:11px; margin-top:14px; max-width:320px; line-height:1.6;">Switching claims this connection for your account but resets your VYRO COIN and USDT balance to zero.</div>
+        </div>`;
+
+    document.getElementById('ip-retry-btn').onclick = () => { location.reload(); };
+    document.getElementById('ip-switch-btn').onclick = async (e) => {
+        const confirmed = await new Promise((resolve) => {
+            const msg = tx('This will reset your entire balance to zero. Continue?');
+            if (tg?.showConfirm) tg.showConfirm(msg, resolve);
+            else resolve(confirm(msg));
+        });
+        if (!confirmed) return;
+        e.target.disabled = true;
+        e.target.textContent = 'Switching…';
+        const r = await apiPost('user', { action: 'switchAccount', initData: TG_INIT_DATA, fingerprint: await generateDeviceFingerprint() });
+        if (r && r.ok) {
+            location.reload();
+        } else {
+            // ⚠️ CHANGED — prefer the friendly r.message (e.g. the new
+            // switch_cooldown explanation) over the bare error code.
+            toast(r?.message || r?.error || 'Could not switch account', 'error');
+            e.target.disabled = false;
+            e.target.textContent = 'Switch account (resets my balance)';
+        }
+    };
+}
+
+async function refreshUser() {
+    const r = await apiGet(`user?action=profile&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+    if (r.ok) {
+        state.user = r.user;
+        // Ban gate — if user is banned, show ban screen and stop everything
+        if (r.user?.isBanned) {
+            document.getElementById('app-root').innerHTML = '';
+            const appealUrl = `https://t.me/Vyrova_bot?start=appeal_${USER_ID}`;
+            document.getElementById('modal-root').innerHTML = `
+                <div style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;z-index:999;">
+                    <div style="font-size:52px;margin-bottom:20px;">⛔</div>
+                    <div style="font-family:var(--font-display);font-weight:700;font-size:22px;margin-bottom:12px;">Account Banned</div>
+                    <div style="color:var(--ink-muted);font-size:14px;line-height:1.7;margin-bottom:24px;">Your account has been banned for breaking our rules (multiple accounts or cheating).<br><br>If you believe this is a mistake, tap below to request a review from the admin.</div>
+                    <a href="${appealUrl}" target="_blank" class="btn btn-primary" style="width:auto; padding:0 22px; text-decoration:none;">🆘 Request Review</a>
+                </div>`;
+            throw new Error('banned'); // stop further execution in init()
+        }
+        return;
+    }
+    // ⚠️ FIX — previously, if r.ok was false (network timeout, 500, cold-start
+    // failure, etc.) this function just silently returned with state.user
+    // left unset — no error, no retry, nothing. init() would then carry on as
+    // if everything succeeded. Now it throws, so init()'s catch block below
+    // can show a real "connection failed, tap to retry" screen instead of
+    // either hanging or silently rendering a broken/empty app.
+    throw new Error(r.error === 'timeout' ? 'connection_timeout' : 'connection_failed');
+}
+
+async function init() {
+    const splashStart = performance.now();
+
+    // ── Telegram-only gate ── matches the original app's behavior: wait briefly
+    // for Telegram's WebApp bridge to deliver initData, and if it never does
+    // (because this was opened in a regular browser, not via Telegram), block
+    // entirely instead of silently falling back to a fake/demo identity.
+    if (!hydrateDisplayUserFields()) {
+        await new Promise(r => setTimeout(r, 800));
+        if (!hydrateDisplayUserFields()) {
+            await new Promise(r => setTimeout(r, 1500));
+        }
+    }
+    if (!TG_INIT_DATA || !hydrateDisplayUserFields()) {
+        document.getElementById('splash').remove();
+        document.getElementById('app-root').innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; gap:16px; text-align:center; padding:0 30px;">
+                <div style="font-size:48px;">📱</div>
+                <div style="font-family:var(--font-display); font-weight:700; font-size:17px;">Open this in Telegram</div>
+                <div class="muted" style="font-size:13px; line-height:1.6;">VYROVA only works inside the Telegram app. Please open it via the VYROVA bot.</div>
+            </div>`;
+        return;
+    }
+
+    const initRes = await apiPost('user', { action: 'init', fingerprint: await generateDeviceFingerprint() });
+    if (initRes && initRes.ok === false && initRes.error === 'ip_in_use') {
+        const splashEl = document.getElementById('splash');
+        if (splashEl) splashEl.remove();
+        showIpInUseScreen(initRes.owner);
+        return;
+    }
+    // ⚠️ FIX — any OTHER init failure (timeout, 500, cold-start DB error, etc.)
+    // used to be silently ignored here — execution just carried on into
+    // refreshUser() as if init had succeeded. Now any non-ip_in_use failure
+    // goes straight to the retry screen instead of limping forward.
+    if (!initRes || initRes.ok === false) {
+        showConnectionErrorScreen();
+        return;
+    }
+    try {
+        await refreshUser();
+    } catch (e) {
+        if (e.message === 'banned') {
+            // Ban screen already shown in refreshUser() — remove splash and stop
+            const splash = document.getElementById('splash');
+            if (splash) { splash.classList.add('out'); setTimeout(() => splash.remove(), 550); }
+            return;
+        }
+        // ⚠️ FIX — connection_timeout / connection_failed / any other unexpected
+        // error now shows a visible retry screen instead of either hanging on
+        // the static "92%" splash forever (old timeout-less fetch) or, if it
+        // did resolve, silently proceeding with no user data and breaking
+        // downstream renders with no explanation to the user.
+        showConnectionErrorScreen();
+        return;
+    }
+
+    // Splash stays for at least 900ms so its entrance animation is always seen,
+    // even when the network is fast — avoids an abrupt flash-then-gone feel.
+    const elapsed = performance.now() - splashStart;
+    if (elapsed < 900) await new Promise(r => setTimeout(r, 900 - elapsed));
+    const splash = document.getElementById('splash');
+    await VyFX.finishSplash();
+    splash.classList.add('out');
+    setTimeout(() => splash.remove(), 650);
+
+    showOnboarding(async () => {
+        const joinCheck = await apiGet(`user?action=checkJoin&initData=${encodeURIComponent(TG_INIT_DATA)}`);
+        if (joinCheck.joined) startApp();
+        else showJoinGate({ leftAfterVerifying: joinCheck.leftAfterVerifying }, startApp);
+    });
+}
+
+function startApp() {
+    renderShell();
+    switchTab('home');
+    startJoinWatcher();
+    setTimeout(checkPendingGift, 900); // after the splash/home entrance animation, so the two don't show at once
+}
+
+// ⚠️ FIX — pure canvas+screen+locale+timezone+cores fingerprinting collides
+// across DIFFERENT physical devices when the hardware/software is common
+// (same cheap Android model, same GPU, same Asia/Dhaka timezone, same bn/en
+// locale — exactly the typical profile for our user base). That made the
+// "device already in use" gate hard-block genuinely different people on
+// genuinely different phones, which is what was being reported as false
+// account suspensions.
+//
+// Fix: mix in a random, install-scoped ID that's generated once and
+// persisted in localStorage. This is the dominant entropy source now — two
+// physically identical phones will still get different fingerprints because
+// each one rolled its own random ID on first launch. localStorage clears if
+// the user clears app data / reinstalls, which starts a "new device" for
+// gating purposes — same trade-off every app with this pattern accepts.
+function getOrCreateInstallId() {
+    try {
+        const KEY = 'nt_install_id';
+        let id = localStorage.getItem(KEY);
+        if (!id) {
+            id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
+            localStorage.setItem(KEY, id);
+        }
+        return id;
+    } catch { return ''; } // localStorage unavailable — falls back to the weaker hardware-only signal below
+}
+
+async function generateDeviceFingerprint() {
+    try {
+        const parts = [];
+        parts.push(getOrCreateInstallId()); // dominant entropy source, see note above
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 200; canvas.height = 50;
+        ctx.textBaseline = 'top'; ctx.font = '14px Arial'; ctx.fillStyle = '#f60'; ctx.fillRect(0, 0, 100, 20);
+        ctx.fillStyle = '#069'; ctx.fillText('VYROVA-fp', 2, 15);
+        parts.push(canvas.toDataURL());
+        parts.push(screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
+        parts.push(navigator.language || '');
+        parts.push(Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+        parts.push(navigator.hardwareConcurrency || '');
+        const data = new TextEncoder().encode(parts.join('|||'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch { return null; }
+}
+
+// ⚠️ NEW — absolute last-resort safety net. If ANY future script (ad SDK or
+// otherwise) ever blocks parsing again, or init() throws something not
+// caught above, this guarantees the user is never stuck on the static "92%"
+// splash forever — after 20s, if the splash is still there, force the
+// connection-error/retry screen.
+setTimeout(() => {
+    const splash = document.getElementById('splash');
+    if (splash && !splash.classList.contains('out')) showConnectionErrorScreen();
+}, 20000);
+
+init();
+</script>
+
+</body>
+</html>
