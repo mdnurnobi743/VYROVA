@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VYROVA Arrow Puzzle</title>
+<!--
+  VYROVA ARROW PUZZLE — standalone, zero dependencies, one file.
+  Mount: VyrovaArrowPuzzle.mount(element, overrides)  (auto-mounts into #vyrova-arrow-root or <body>)
+  Branding: edit CONFIG below (logoUrl, brandName, theme colors/fonts). Nothing here is the final VYROVA brand.
+
+  SECURITY NOTE (read this):
+  The daily limit is only SECURE when CONFIG.api.base points to a backend that implements the contract
+  documented above RemoteStore. Without it the game runs in LOCAL DEMO MODE, where limits live in
+  localStorage and can be cleared by the user. The game shows a visible warning in that mode.
+-->
+<style>
+html,body{margin:0;background:#0f0b17}
+.vap{--bg:#0f0b17;--s1:#191226;--s2:#241a36;--line:#34264d;--tx:#f3eefc;--mu:#a094bd;--ac:#b074ff;--ac2:#ff6fb5;--ok:#46e0a8;--bad:#ff5d7a;
+  --font:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+  font-family:var(--font);color:var(--tx);background:radial-gradient(120% 70% at 50% -10%,#2a1850 0%,var(--bg) 60%);
+  min-height:100vh;min-height:100dvh;box-sizing:border-box;padding:max(12px,env(safe-area-inset-top)) 14px max(16px,env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;-webkit-tap-highlight-color:transparent;user-select:none;position:relative;overflow-x:hidden}
+.vap *{box-sizing:border-box}
+.vap button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
+.vap button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.vap .wrap{width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px;flex:1}
+.vap .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vap .brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.14em;font-size:15px}
+.vap .brand img{height:26px;width:auto}
+.vap .pill{background:var(--s1);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;white-space:nowrap}
+.vap .pill b{color:var(--ac)}
+.vap h1{margin:6px 0 0;font-size:30px;line-height:1.1;font-weight:800}
+.vap p{margin:0;color:var(--mu);font-size:14px;line-height:1.45}
+.vap .warn{background:#3a1f2c;border:1px solid #7a3550;color:#ffc3d2;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.4}
+.vap .btn{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#16091f;font-weight:800;border-radius:14px;padding:14px 18px;font-size:16px;transition:transform .12s,filter .12s}
+.vap .btn:active{transform:scale(.97)}
+.vap .btn[disabled]{filter:grayscale(.9) brightness(.6);cursor:not-allowed}
+.vap .ghost{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px}
+.vap .levels{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.vap .lv{aspect-ratio:1;border-radius:14px;background:var(--s1);border:1px solid var(--line);font-weight:800;font-size:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
+.vap .lv small{font-size:10px;font-weight:600;color:var(--mu)}
+.vap .lv.cur{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac),0 0 22px #b074ff44}
+.vap .lv.done{background:#16301f;border-color:#2c7a55;color:var(--ok)}
+.vap .lv.lock{opacity:.4}
+.vap .meter{display:flex;gap:5px;align-items:center}
+.vap .dot{width:11px;height:11px;border-radius:50%;background:var(--bad);box-shadow:0 0 8px #ff5d7a88;transition:all .25s}
+.vap .dot.off{background:var(--s2);box-shadow:none}
+.vap .bar{height:6px;background:var(--s2);border-radius:9px;overflow:hidden}
+.vap .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
+.vap .stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.vap .board{position:relative;border-radius:18px;background:var(--s1);border:1px solid var(--line);box-shadow:inset 0 0 40px #0006,0 12px 40px #0008;overflow:hidden;touch-action:manipulation}
+.vap .grid{position:absolute;inset:0;background-image:radial-gradient(circle,#4a3a6a 1.2px,transparent 1.6px)}
+.vap .ar{position:absolute;display:flex;align-items:center;justify-content:center;padding:0;transition:transform .42s cubic-bezier(.5,0,.9,.4),opacity .42s}
+.vap .ar span{display:block;width:78%;height:78%;border-radius:28%;background:linear-gradient(145deg,#f3eefc,#cdb8ee);box-shadow:0 2px 10px #b074ff55;color:#2a1450;display:flex;align-items:center;justify-content:center;transition:background .2s,box-shadow .2s}
+.vap .ar svg{width:78%;height:78%}
+.vap .ar.gone{opacity:0;pointer-events:none}
+.vap .ar.shake span{animation:shk .35s}
+.vap .ar.shake span{background:linear-gradient(145deg,#ffd0da,#ff8aa3);box-shadow:0 0 16px #ff5d7a99}
+.vap .ar.blk span{background:linear-gradient(145deg,#ffe3ee,#ffb0c8)}
+@keyframes shk{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.vap .ctrl{display:flex;gap:10px;justify-content:center}
+.vap .ov{position:fixed;inset:0;background:#0b0710dd;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+.vap .card{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:24px;width:100%;max-width:360px;text-align:center;display:flex;flex-direction:column;gap:12px;animation:pop .35s cubic-bezier(.2,1.3,.4,1)}
+.vap .card h2{margin:0;font-size:26px}
+.vap .stats{display:flex;justify-content:center;gap:22px;font-size:13px;color:var(--mu)}
+.vap .stats b{display:block;color:var(--tx);font-size:20px}
+.vap .win h2{color:var(--ok)} .vap .lose h2{color:var(--bad)}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+.vap .cf{position:fixed;top:-10px;width:8px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--r));opacity:.8}}
+.vap .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--s2);border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-size:13px;z-index:40}
+.vap .sc{display:flex;flex-direction:column;gap:10px}
+.vap .sc h3{margin:0;font-size:18px}
+.vap .adslot{min-height:110px;border-radius:14px;border:1px dashed var(--line);background:var(--s1)}
+.vap .note{font-size:12.5px}
+.vap .lv small{min-height:12px}
+.vap .pg{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vap .board svg{position:absolute;inset:0;width:100%;height:100%;display:block;filter:drop-shadow(0 0 2.5px #b074ff66)}
+.vap .pth .ln{fill:none;stroke:var(--c,#e4d9ff);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+.vap .pth .hd{fill:var(--c,#e4d9ff);transition:fill .15s}
+.vap .pth .hit{fill:none;stroke:transparent;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;pointer-events:stroke;cursor:pointer}
+.vap .pth.shake{animation:pshk .36s}
+.vap .pth.shake .ln{stroke:var(--bad)}.vap .pth.shake .hd{fill:var(--bad)}
+.vap .pth.blk .ln{stroke:var(--ac2)}.vap .pth.blk .hd{fill:var(--ac2)}
+.vap .rayh{fill:none;stroke:var(--bad);stroke-width:1.6;stroke-dasharray:2 3;stroke-linecap:round;pointer-events:none}
+@keyframes pshk{20%{transform:translateX(-1.6px)}40%{transform:translateX(1.6px)}60%{transform:translateX(-1.2px)}80%{transform:translateX(1.2px)}}
+@media (prefers-reduced-motion:reduce){.vap *{animation-duration:.01s!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="vyrova-arrow-root"></div>
+<script>
+/* ============================ CONFIG ============================ */
+const VYROVA_ARROW_CONFIG = {
+  brandName: 'VYROVA',
+  logoUrl: '',                 // set to your real logo URL; empty = text wordmark only
+  theme: {},                   // e.g. {'--ac':'#...','--ac2':'#...','--bg':'#...','--font':'...'}
+  tzOffsetHours: 6,            // Bangladesh Standard Time, UTC+6
+  api: { base: null },         // e.g. '/api/arrow' -> enables SECURE mode (see RemoteStore contract)
+  maxDaily: 3,                 // max attempts per Bangladesh day (a run counts when it STARTS)
+  cooldownMs: 3600000,         // at least 1 hour between the START of one attempt and the next
+  reward: { total: 30, perAd: 15 },  // VYRO COIN per cleared level: two verified ads x 15. Credited by the BACKEND only.
+  lives: 1,                    // lives per attempt: one blocked tap ends the run
+  // Rewarded ads. DISABLED: no ad network is connected, so every ad step stays LOCKED (no coins, no retries, no progress past a gate).
+  // Future provider contract: { show(slotEl, sessionId, purpose) -> Promise<{completed:true, proof}> }, purpose = 'reward1' | 'reward2' | 'retry'.
+  // Resolve only after the network confirms the ad was watched. 'proof' goes to the backend, which verifies it server-to-server. The client never credits anything.
+  ads: { enabled: false, provider: null }
+};
+
+/* ============================ ENGINE (pure, reusable on a Node backend) ============================
+   Every arrow is a winding PATH of grid cells (nodes). The last cell is the head and its direction is the direction of the last step.
+   Tapping an arrow slides the whole path out along its head direction. It is BLOCKED if any cell on the straight line from the head
+   to the board edge belongs to another remaining path. Paths never share cells, so cell occupancy is exact collision detection.
+   Levels are built in reverse: each new path gets a head ray that is free of every earlier-placed path (and of itself), so clearing
+   in reverse placement order always works. Each level is then re-solved before it is shown. */
+/*ENGINE_START*/
+const DIRS=[{k:'U',x:0,y:-1},{k:'R',x:1,y:0},{k:'D',x:0,y:1},{k:'L',x:-1,y:0}];
+function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const inB=(x,y,C,R)=>x>=0&&y>=0&&x<C&&y<R;
+const dirIdx=(dx,dy)=>DIRS.findIndex(d=>d.x===dx&&d.y===dy);
+function blockerOf(a,occ,C,R){const h=a.pts[a.pts.length-1],d=DIRS[a.d];let x=h[0]+d.x,y=h[1]+d.y;
+  while(inB(x,y,C,R)){const b=occ.get(y*C+x);if(b)return b;x+=d.x;y+=d.y}return null}
+function gen(C,R,seed,P){
+  const r=rng(seed),rnd=n=>Math.floor(r()*n),total=C*R,asg=new Int16Array(total).fill(-1),paths=[];
+  const cells=[...Array(total).keys()];for(let i=total-1;i>0;i--){const j=rnd(i+1);[cells[i],cells[j]]=[cells[j],cells[i]]}
+  // 1) tile the board with short, tightly winding paths (hugging walls/paths, frequent turns)
+  for(const k0 of cells){if(asg[k0]>=0)continue;
+    const pid=paths.length,L=P.minL+rnd(P.maxL-P.minL+1),path=[[k0%C,Math.floor(k0/C)]];asg[k0]=pid;let dir=-1;
+    while(path.length<L){const[x,y]=path[path.length-1],opts=[],w=[];
+      for(let d=0;d<4;d++){const nx=x+DIRS[d].x,ny=y+DIRS[d].y;if(!inB(nx,ny,C,R)||asg[ny*C+nx]>=0)continue;
+        let h=0;for(const e of DIRS){const mx=nx+e.x,my=ny+e.y;if(!inB(mx,my,C,R)||asg[my*C+mx]>=0)h++}
+        opts.push(d);w.push((d!==dir?1+P.pt*3:.5)+h*P.hug)}
+      if(!opts.length)break;
+      let t=r()*w.reduce((a,b)=>a+b,0),i=0;while(i<w.length-1&&t>w[i]){t-=w[i];i++}
+      const d=opts[i],q=[x+DIRS[d].x,y+DIRS[d].y];path.push(q);asg[q[1]*C+q[0]]=pid;dir=d}
+    if(path.length>1){paths.push(path);continue}
+    asg[k0]=-1; // lone cell: glue it onto a neighbouring path end if possible, else leave empty
+    const[x,y]=path[0];for(const d of DIRS){const nx=x+d.x,ny=y+d.y;if(!inB(nx,ny,C,R))continue;const q=asg[ny*C+nx];if(q<0)continue;
+      const pp=paths[q],e0=pp[0],e1=pp[pp.length-1];
+      if(e0[0]===nx&&e0[1]===ny){pp.unshift([x,y]);asg[k0]=q;break}if(e1[0]===nx&&e1[1]===ny){pp.push([x,y]);asg[k0]=q;break}}}
+  // 2) helpers: an end is a possible head; its ray must be clear of every other cell (own body included)
+  const occ=new Map();paths.forEach((p,i)=>p.forEach(c=>occ.set(c[1]*C+c[0],i)));
+  const end=(i,e)=>{const p=paths[i],n=p.length,h=e?p[n-1]:p[0],b=e?p[n-2]:p[1];return{h,dx:h[0]-b[0],dy:h[1]-b[1]}};
+  const scan=(i,e,o)=>{const{h,dx,dy}=end(i,e);let x=h[0]+dx,y=h[1]+dy;while(inB(x,y,C,R)){const q=o.get(y*C+x);if(q!==undefined)return q;x+=dx;y+=dy}return-1};
+  const clear=(i,e,o)=>scan(i,e,o)<0,selfHit=(i,e)=>scan(i,e,occ)===i;
+  // 3) peel from the outside in; paths that can never get out (cyclic blockers) are deleted, leaving a few holes
+  let left=new Set(paths.keys()),o2=new Map(occ);
+  const drop=i=>paths[i].forEach(c=>{occ.delete(c[1]*C+c[0]);o2.delete(c[1]*C+c[0])});
+  while(left.size){const rem=[...left].filter(i=>clear(i,0,o2)||clear(i,1,o2));
+    if(!rem.length){const v=[...left],k=v[rnd(v.length)];left.delete(k);drop(k);continue}
+    rem.forEach(i=>{left.delete(i);paths[i].forEach(c=>o2.delete(c[1]*C+c[0]))})}
+  const ids=paths.map((_,i)=>i).filter(i=>paths[i].some(c=>occ.get(c[1]*C+c[0])===i));
+  // 4) heads: prefer the end that is blocked at the start (few free arrows), then repair only where the run would deadlock
+  const ori=new Map();
+  for(const i of ids){const v=[0,1].filter(e=>!selfHit(i,e)),b=v.filter(e=>!clear(i,e,occ));ori.set(i,(b.length?b:v)[rnd((b.length?b:v).length)])}
+  const o3=new Map(occ),l3=new Set(ids);
+  while(l3.size){const f=[...l3].filter(i=>clear(i,ori.get(i),o3));
+    if(!f.length){const c=[...l3].filter(i=>{const e=1-ori.get(i);return!selfHit(i,e)&&clear(i,e,o3)});if(!c.length)return null;const k=c[rnd(c.length)];ori.set(k,1-ori.get(k));continue}
+    f.forEach(i=>{l3.delete(i);paths[i].forEach(c=>o3.delete(c[1]*C+c[0]))})}
+  return ids.map((pid,id)=>{const pts=ori.get(pid)?paths[pid]:paths[pid].slice().reverse(),n=pts.length;
+    return{id,pts,d:dirIdx(pts[n-1][0]-pts[n-2][0],pts[n-1][1]-pts[n-2][1]),cells:pts.map(p=>p[1]*C+p[0])}})}
+function solve(arrows,C,R){ // greedy is exact: removing a path can only unblock others
+  const occ=new Map(),gone=new Set();arrows.forEach(a=>a.cells.forEach(k=>occ.set(k,a)));let rounds=0,free0=0;const order=[];
+  while(gone.size<arrows.length){const free=arrows.filter(a=>!gone.has(a.id)&&!blockerOf(a,occ,C,R));
+    if(!free.length)return{ok:false,order,rounds,free0};if(!rounds)free0=free.length;
+    free.forEach(a=>{a.cells.forEach(k=>occ.delete(k));gone.add(a.id);order.push(a.id)});rounds++}
+  return{ok:true,order,rounds,free0}}
+// 100 levels: the board grows 6x9 -> 13x19, paths stay short (3-9 cells) but wind harder (zigzags, U-bends, hugging neighbours),
+// and later levels pick the sampled board with the deepest blocking chains and the fewest paths free at the start.
+const LEVELS_DEF=Array.from({length:100},(_,i)=>{const n=i+1,t=(n-1)/99,c=6+Math.round(t*7);
+  return{c,r:Math.min(19,Math.round(c*1.4)+(n%2)),minL:3,maxL:6+Math.round(t*3),pt:.5+t*.4,hug:.6+t*1.6,N:24+Math.round(t*56),s:n*1000003+101}});
+const _cache={};
+function buildLevel(n){ // n = 1..100, deterministic; best of N sampled boards, every one re-solved before it can be used
+  if(_cache[n])return _cache[n];const L=LEVELS_DEF[n-1],t=(n-1)/99;let best=null;
+  for(let i=0;i<L.N;i++){const arrows=gen(L.c,L.r,L.s+i*7919,L);if(!arrows||arrows.length<4)continue;
+    const sv=solve(arrows,L.c,L.r);if(!sv.ok||sv.order.length!==arrows.length)continue;
+    const cells=arrows.reduce((a,b)=>a+b.cells.length,0),cover=cells/(L.c*L.r),score=cover*30+sv.rounds*(.3+t*3.7)-sv.free0*(.3+t*6);
+    if(!best||score>best.score)best={cols:L.c,rows:L.r,arrows,rounds:sv.rounds,free0:sv.free0,cover,score}}
+  if(!best)throw new Error('Level '+n+' failed validation');
+  return _cache[n]=best}
+function replay(n,moves){ // server-side verification: moves = ordered arrow ids tapped
+  const lv=buildLevel(n),occ=new Map(),byId=new Map(lv.arrows.map(a=>[a.id,a])),done=new Set();let mistakes=0;
+  lv.arrows.forEach(a=>a.cells.forEach(k=>occ.set(k,a)));
+  for(const id of moves){const a=byId.get(id);if(!a||done.has(id))return{valid:false};
+    if(blockerOf(a,occ,lv.cols,lv.rows))mistakes++;else{a.cells.forEach(k=>occ.delete(k));done.add(id)}}
+  return{valid:true,cleared:done.size===lv.arrows.length,mistakes}}
+/*ENGINE_END*/
+
+/* ============================ ATTEMPT STORES ============================ */
+const dayKey=()=>new Date(Date.now()+VYROVA_ARROW_CONFIG.tzOffsetHours*36e5).toISOString().slice(0,10);
+const msToReset=()=>{const s=Date.now()+VYROVA_ARROW_CONFIG.tzOffsetHours*36e5;return(Math.floor(s/864e5)+1)*864e5-s};
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());
+
+/* LocalStore — DEMO ONLY. Not secure: the user can clear localStorage. It can NEVER credit coins or clear an ad gate (gateAd always refuses). */
+const LocalStore={secure:false,key:'vyrova_arrow_v2',live:new Set(),
+  _l(){let s={};try{s=JSON.parse(localStorage.getItem(this.key)||'{}')}catch(e){}
+    if(s.day!==dayKey()){this._orph(s);s.day=dayKey();s.attempts=[]}
+    s.attempts=s.attempts||[];s.unlocked=s.unlocked||1;s.done=s.done||[];s.lastStart=s.lastStart||0;s.gate=s.gate||null;return s},
+  _s(s){try{localStorage.setItem(this.key,JSON.stringify(s))}catch(e){}},
+  _orph(s){(s.attempts||[]).forEach(a=>{if(a.status==='started'&&!this.live.has(a.id)){ // a run that was open when the page closed counts as failed
+    a.status='abandoned';if(this.rules!==false&&!s.gate)s.gate={id:a.id,kind:'retry',level:a.level}}})},
+  async status(){const s=this._l(),C=VYROVA_ARROW_CONFIG,on=this.rules!==false;this._orph(s);this._s(s);
+    return{used:on?s.attempts.length:0,max:C.maxDaily,limit:C.maxDaily,cooldownUntil:on&&s.lastStart?s.lastStart+C.cooldownMs:0,
+      resetAt:Date.now()+msToReset(),gate:on?s.gate:null,unlocked:s.unlocked,done:s.done}},
+  async start(level,token){const s=this._l(),C=VYROVA_ARROW_CONFIG,on=this.rules!==false;this._orph(s);
+    const dup=s.attempts.find(a=>a.token===token);if(dup)return{ok:true,id:dup.id,used:s.attempts.length}; // same token = same attempt
+    if(on){if(s.gate)return{ok:false,reason:'gate'};if(s.attempts.length>=C.maxDaily)return{ok:false,reason:'limit'};
+      if(Date.now()<s.lastStart+C.cooldownMs)return{ok:false,reason:'cooldown',until:s.lastStart+C.cooldownMs}}
+    if(level>s.unlocked)return{ok:false,reason:'locked'};
+    const a={id:uid(),token,level,status:'started',t:Date.now()};s.attempts.push(a);s.lastStart=a.t;this.live.add(a.id);this._s(s);
+    return{ok:true,id:a.id,used:s.attempts.length}},
+  async finish(id,res){const s=this._l(),on=this.rules!==false;const a=s.attempts.find(x=>x.id===id);if(!a||a.status!=='started')return{ok:false};
+    this.live.delete(id);a.ms=res.ms;a.mistakes=res.mistakes;
+    if(res.won){const v=replay(a.level,res.moves);
+      if(!v.valid||!v.cleared||v.mistakes>=VYROVA_ARROW_CONFIG.lives){a.status='rejected';if(on)s.gate={id,kind:'retry',level:a.level};this._s(s);return{ok:false}}
+      a.status='won';if(!s.done.includes(a.level))s.done.push(a.level);s.unlocked=Math.max(s.unlocked,Math.min(100,a.level+1));
+      if(on)s.gate={id,kind:'reward',level:a.level,collected:0}}
+    else{a.status=res.abandoned?'abandoned':'lost';if(on)s.gate={id,kind:'retry',level:a.level}}
+    this._s(s);return{ok:true}},
+  async gateAd(){return{ok:false,reason:'insecure'}}};
+
+/* RemoteStore — SECURE mode. Backend contract (all authenticated via Telegram initData, user taken from it, never from the body):
+   GET  {base}/status -> {used, max:3, limit:3, cooldownUntil:<ms epoch>, resetAt:<ms epoch>, gate:null|{id,kind:'reward'|'retry',level,collected:0|1}, unlocked, done:[levels]}
+        server: if the user has a 'started' attempt, mark it abandoned and open a 'retry' gate (a fresh page load means the old run ended).
+   POST {base}/start  {level, token} -> {ok, id, used} | {ok:false, reason:'gate'|'limit'|'cooldown'|'locked', until}
+        server: refuse while a gate is open; day = date(now_utc+6h), max 3 attempts per day (UNIQUE(user_id, day, attempt_no)); refuse if now < last_start_at + 1h
+        (last_start_at survives midnight); same token = same attempt (UNIQUE(token)); a start never resets a gate or the cooldown.
+   POST {base}/finish {id, won, abandoned, ms, mistakes, moves:[arrowId...]} -> {ok}
+        server: only while the attempt is 'started'; re-run replay(level, moves) from this file's ENGINE. Valid win (0 mistakes) -> mark done, unlock next level,
+        open gate {kind:'reward', collected:0}. Loss, abandon or invalid win -> open gate {kind:'retry'}.
+   POST {base}/gate/ad {gateId, purpose:'reward1'|'reward2'|'retry', adSession, proof} -> {ok, collected}
+        server: verify 'proof' with the ad network server-to-server (never trust the client callback). UNIQUE(adSession), UNIQUE(proof), UNIQUE(gateId, purpose).
+        reward1 only when collected=0, reward2 only when collected=1. Each reward step credits perAd (15) VYRO COIN through the EXISTING VYROVA coin function
+        with idempotency key 'arrow:'+gateId+':'+purpose, so a level can never pay more than 30. 'retry' only works on a retry gate and credits nothing.
+        The gate is deleted once reward2 or retry succeeds. Failed, skipped or unverified ads change nothing. */
+const RemoteStore={secure:true,
+  async _f(p,body){const h={'Content-Type':'application/json'};const tg=window.Telegram&&Telegram.WebApp;if(tg&&tg.initData)h['X-Telegram-Init-Data']=tg.initData;
+    const r=await fetch(VYROVA_ARROW_CONFIG.api.base+p,{method:body?'POST':'GET',headers:h,body:body?JSON.stringify(body):undefined});
+    if(!r.ok)throw new Error('http '+r.status);return r.json()},
+  status(){return this._f('/status')},start(level,token){return this._f('/start',{level,token})},finish(id,res){return this._f('/finish',{id,...res})},
+  gateAd(gateId,purpose,adSession,proof){return this._f('/gate/ad',{gateId,purpose,adSession,proof})}};
+const store=()=>VYROVA_ARROW_CONFIG.api.base?RemoteStore:LocalStore;
+
+/* ============================ UI ============================ */
+const ARROW_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>';
+const ROT=[0,90,180,270];
+
+const U=20,SVGNS='http://www.w3.org/2000/svg',PAL=['#e4d9ff','#ffd0ea','#c9f5e3'];
+const px=p=>[(p[0]+.5)*U,(p[1]+.5)*U],mk=(t,c)=>{const e=document.createElementNS(SVGNS,t);e.setAttribute('class',c);return e};
+const f1=v=>v.toFixed(1),plen=P=>P.slice(1).reduce((s,b,i)=>s+Math.hypot(b[0]-P[i][0],b[1]-P[i][1]),0);
+function smoothD(P,r){let d='M'+f1(P[0][0])+' '+f1(P[0][1]);
+  for(let i=1;i<P.length-1;i++){const a=P[i-1],b=P[i],c=P[i+1],l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]);
+    if(Math.abs((b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]))<1e-6){d+='L'+f1(b[0])+' '+f1(b[1]);continue}
+    const k=Math.min(r,l1/2,l2/2);
+    d+='L'+f1(b[0]-(b[0]-a[0])/l1*k)+' '+f1(b[1]-(b[1]-a[1])/l1*k)+'Q'+f1(b[0])+' '+f1(b[1])+' '+f1(b[0]+(c[0]-b[0])/l2*k)+' '+f1(b[1]+(c[1]-b[1])/l2*k)}
+  const e=P[P.length-1];return d+'L'+f1(e[0])+' '+f1(e[1])}
+function headPts(P){const n=P.length,e=P[n-1],a=P[n-2],l=Math.hypot(e[0]-a[0],e[1]-a[1])||1,ux=(e[0]-a[0])/l,uy=(e[1]-a[1])/l;
+  return `${f1(e[0]+ux*5)},${f1(e[1]+uy*5)} ${f1(e[0]-ux*.8-uy*4)},${f1(e[1]-uy*.8+ux*4)} ${f1(e[0]-ux*.8+uy*4)},${f1(e[1]-uy*.8-ux*4)}`}
+function sub(P,s0,s1){const out=[];let acc=0;
+  for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),lo=Math.max(s0,acc),hi=Math.min(s1,acc+L);
+    if(hi>lo){const f=v=>[a[0]+(b[0]-a[0])*(v-acc)/L,a[1]+(b[1]-a[1])*(v-acc)/L];if(!out.length)out.push(f(lo));out.push(f(hi))}acc+=L}
+  return out}
+
+function mount(el,over){
+  Object.assign(VYROVA_ARROW_CONFIG,over||{});const C=VYROVA_ARROW_CONFIG;
+  el.innerHTML='';const root=document.createElement('div');root.className='vap';el.appendChild(root);
+  Object.entries(C.theme||{}).forEach(([k,v])=>root.style.setProperty(k,v));
+  let st={used:0,max:C.maxDaily,limit:C.maxDaily,cooldownUntil:0,resetAt:0,gate:null,unlocked:1,done:[]},g=null,timer=null,starting=false,sel=1,err='';
+  const $=(s,r)=>(r||root).querySelector(s);
+  const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/3600)).padStart(2,'0')+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+  const brand=()=>`<div class="brand">${C.logoUrl?`<img src="${C.logoUrl}" alt="">`:''}<span>${C.brandName}</span></div>`;
+  const toast=t=>{const d=document.createElement('div');d.className='toast';d.textContent=t;root.appendChild(d);setTimeout(()=>d.remove(),2600)};
+
+  async function refresh(){try{st=await store().status();err=''}catch(e){err='Can’t reach the server. Check your connection and try again.'}}
+
+  const PER=20;let page=-1,adBusy=false;
+  const adOn=()=>C.ads.enabled&&C.ads.provider;
+  const hhmm=ms=>new Date(ms).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const elig=()=>{if(st.gate)return{ok:false,r:'gate'};if(st.used>=st.max)return{ok:false,r:'limit',until:st.resetAt};
+    if(Date.now()<st.cooldownUntil)return{ok:false,r:'cooldown',until:st.cooldownUntil};return{ok:true}};
+  const waitHTML=e=>e.r==='cooldown'?`<p>Next attempt available at <b>${hhmm(e.until)}</b>, in <b data-until="${e.until}"></b>.</p>`
+    :`<p>All ${st.max} attempts are used today. They reset at 00:00 Bangladesh time, in <b data-until="${e.until}"></b>.</p>`;
+  let cd=null;
+  function runCd(scope,done){clearInterval(cd);const els=[...scope.querySelectorAll('[data-until]')];if(!els.length)return;
+    const t=()=>{let over=false;els.forEach(x=>{const m=+x.dataset.until-Date.now();x.textContent=fmt(m);if(m<=0)over=true});if(over){clearInterval(cd);setTimeout(done,500)}};t();cd=setInterval(t,1000)}
+  const AD_NOTE='<p class="note">Rewarded ads aren’t connected yet. This step stays locked until an ad provider is configured, so you can’t continue for now.</p>';
+  function gatePanel(){const gt=st.gate;if(!gt)return'';const on=adOn(),R=C.reward;
+    const slot=`<div id="extraAttemptAdSlot" class="adslot" data-ad-state="${on?'ready':'disabled'}"></div>`;
+    if(gt.kind==='reward'){const c=gt.collected||0;
+      return `<div class="sc"><h3>Level ${gt.level} cleared: collect your reward</h3>
+        <p>VYRO COIN collected: <b>${c*R.perAd}/${R.total}</b>. Watch both ads to collect it all. You can’t continue until you do.</p>${slot}
+        <button class="btn" id="adR1" ${on&&c===0?'':'disabled'}>${c>=1?'✓ Ad 1 done':'Watch Ad 1'}: +${R.perAd} VYRO COIN</button>
+        <button class="btn" id="adR2" ${on&&c===1?'':'disabled'}>Watch Ad 2: +${R.perAd} VYRO COIN</button>${on?'':AD_NOTE}</div>`}
+    return `<div class="sc"><h3>Level ${gt.level} failed</h3><p>Watch one rewarded ad to unlock a retry. You can’t start another run until you do.</p>${slot}
+      <button class="btn" id="adRt" ${on?'':'disabled'}>Watch Ad to Retry</button>${on?'':AD_NOTE}</div>`}
+  function wireGate(scope,after){[['adR1','reward1'],['adR2','reward2'],['adRt','retry']].forEach(([id,purpose])=>{const b=$('#'+id,scope);if(!b)return;
+    b.onclick=async()=>{if(adBusy||!st.gate)return;adBusy=true;scope.querySelectorAll('.sc .btn').forEach(x=>x.disabled=true);
+      const slot=$('#extraAttemptAdSlot',scope),sid=uid(),gid=st.gate.id;slot.dataset.adPurpose=purpose;
+      try{const r=await C.ads.provider.show(slot,sid,purpose);if(!r||r.completed!==true)throw 0;
+        const res=await store().gateAd(gid,purpose,sid,r.proof);if(!(res&&res.ok))throw 0;
+        toast(purpose==='retry'?'Retry unlocked.':`+${C.reward.perAd} VYRO COIN collected.`)}
+      catch(e){toast('The ad wasn’t completed or couldn’t be verified. Nothing was credited.')}
+      adBusy=false;await refresh();after()}})}
+
+  async function menu(){clearInterval(timer);g=null;root.innerHTML='<div class="wrap"><p>Loading…</p></div>';await refresh();drawMenu()}
+  function drawMenu(){
+    clearInterval(timer);clearInterval(cd);sel=Math.min(sel,st.unlocked);if(page<0)page=Math.floor((sel-1)/PER);
+    const e=elig(),max=st.max,left=Math.max(0,max-st.used),pages=Math.ceil(100/PER);
+    const lv=Array.from({length:PER},(_,i)=>page*PER+i+1).map(n=>{const d=st.done.includes(n),l=n>st.unlocked;
+      return `<button class="lv ${d?'done':''} ${l?'lock':''} ${n===sel?'cur':''}" data-n="${n}" ${l?'disabled':''}>${n}<small>${l?'locked':d?'cleared':n===sel?'selected':'open'}</small></button>`}).join('');
+    root.innerHTML=`<div class="wrap">
+      <div class="top">${brand()}<div class="pill">Attempts left: <b>${left}/${max}</b></div></div>
+      <div><h1>Arrow Puzzle</h1><p>Each arrow is a path. Tap one to slide it out the way its head points, but only if no other path is in its way. You get one life per attempt.</p></div>
+      <div class="top"><div class="pill">${e.r==='cooldown'?`Next play: <b>${hhmm(e.until)}</b>`:e.r==='limit'?'Next play: after 00:00 BST':e.r==='gate'?'Finish the step below first':'Ready to play'}</div><div class="pill">1 hour between attempts</div></div>
+      ${store().secure?'':'<div class="warn"><b>Local demo mode.</b> Attempt limits and the cooldown are stored on this device and are not secure, and coins can’t be credited. Set CONFIG.api.base to a backend to enforce them.</div>'}
+      ${err?`<div class="warn">${err}</div>`:''}
+      <div class="pg"><button class="ghost" id="pv" ${page<=0?'disabled':''} aria-label="Previous levels">‹</button>
+        <div class="pill">Levels ${page*PER+1}–${(page+1)*PER} (${st.done.length}/100 cleared)</div>
+        <button class="ghost" id="nx" ${page>=pages-1?'disabled':''} aria-label="Next levels">›</button></div>
+      <div class="levels">${lv}</div>
+      ${st.gate?gatePanel():e.ok?`<p>Starting a puzzle uses 1 of your ${max} daily attempts.</p>`:waitHTML(e)}
+      <button class="btn" id="go" ${e.ok&&!err?'':'disabled'}>${e.ok?`Start Level ${sel}`:st.gate?(st.gate.kind==='reward'?'Collect your reward first':'Watch the retry ad first'):e.r==='cooldown'?'Cooldown active':'All attempts used'}</button></div>`;
+    root.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{sel=+b.dataset.n;drawMenu()});
+    $('#pv').onclick=()=>{page--;drawMenu()};$('#nx').onclick=()=>{page++;drawMenu()};
+    $('#go').onclick=()=>begin(sel);wireGate(root,drawMenu);runCd(root,menu)
+  }
+
+  async function begin(level){
+    if(starting)return;starting=true;clearInterval(cd);const btn=$('#go');if(btn)btn.disabled=true;
+    try{const r=await store().start(level,uid());
+      if(!r.ok){toast({gate:'Finish the reward or retry step first.',limit:'No attempts left today.',cooldown:'The 1-hour cooldown is still running.',locked:'Level locked.'}[r.reason]||'Can’t start right now.');starting=false;return menu()}
+      play(level,r.id)}catch(e){toast('Network problem. No attempt was used if the start failed.');starting=false;menu()}
+    starting=false}
+
+  function play(level,id){
+    const lv=buildLevel(level),max=C.lives;
+    g={level,id,lv,max,mistakes:0,moves:[],t0:Date.now(),paused:false,pausedAt:0,ended:false,locked:false,tEnd:0,left:lv.arrows.length,occ:new Map(),els:new Map()};
+    lv.arrows.forEach(a=>a.cells.forEach(k=>g.occ.set(k,a)));g.anim=0;
+    root.innerHTML=`<div class="wrap">
+      <div class="top">${brand()}<div class="pill">Attempt <b>${Math.min(C.maxDaily,st.used+1)}/${C.maxDaily}</b></div></div>
+      <div class="top"><div class="pill">Level <b>${level}</b>/100</div><div class="pill" id="tm">0:00</div><div class="pill" id="mt" aria-label="Lives left"></div></div>
+      <div class="bar"><i id="pg"></i></div><p class="note" id="hint" style="text-align:center;min-height:18px">One life per attempt. Tap a path only when its exit is clear.</p>
+      <div class="stage"><div class="board" id="bd"><div class="grid"></div></div></div>
+      <div class="ctrl"><button class="ghost" id="pa">Pause</button><button class="ghost" id="rs">Restart</button></div></div>`;
+    st.used=Math.min(st.max,st.used+1);st.cooldownUntil=Date.now()+C.cooldownMs;
+    const bd=$('#bd'),W=Math.min(root.clientWidth-28,460),H=Math.max(300,window.innerHeight-250),cs=Math.floor(Math.min(W/lv.cols,H/lv.rows));
+    bd.style.width=cs*lv.cols+'px';bd.style.height=cs*lv.rows+'px';$('.grid',bd).style.backgroundSize=cs+'px '+cs+'px';
+    const svg=document.createElementNS(SVGNS,'svg');svg.setAttribute('viewBox',`0 0 ${lv.cols*U} ${lv.rows*U}`);
+    lv.arrows.forEach(a=>{const P=a.pts.map(px),d=smoothD(P,5),gr=mk('g','pth'),hit=mk('path','hit'),ln=mk('path','ln'),hd=mk('polygon','hd');
+      gr.style.setProperty('--c',PAL[a.id%3]);hit.setAttribute('d',d);ln.setAttribute('d',d);hd.setAttribute('points',headPts(P));
+      gr.append(hit,ln,hd);gr.addEventListener('click',()=>tap(a));svg.appendChild(gr);g.els.set(a.id,{gr,ln,hd,hit,busy:false})});
+    bd.appendChild(svg);
+    drawMeter();$('#pa').onclick=pause;$('#rs').onclick=restart;
+    clearInterval(timer);timer=setInterval(tick,250);tick();
+  }
+  const elapsed=()=>(g.tEnd||(g.paused?g.pausedAt:Date.now()))-g.t0;
+  function tick(){if(!g)return;const s=Math.floor(elapsed()/1000),t=$('#tm');if(t)t.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+  function drawMeter(){const lf=g.max-g.mistakes;$('#mt').innerHTML='Life <b style="color:var(--bad)">'+'♥'.repeat(lf)+'♡'.repeat(g.max-lf)+'</b>';
+    $('#pg').style.width=(100*(g.lv.arrows.length-g.left)/g.lv.arrows.length)+'%'}
+
+  function tap(a){
+    if(!g||g.ended||g.locked||g.paused)return;const e=g.els.get(a.id);if(!e||e.busy)return;
+    const lv=g.lv,bl=blockerOf(a,g.occ,lv.cols,lv.rows);g.moves.push(a.id);
+    if(bl){g.mistakes++;const be=g.els.get(bl.id);e.gr.classList.remove('shake');void e.gr.getBoundingClientRect();e.gr.classList.add('shake');be.gr.classList.add('blk');
+      const h=a.pts[a.pts.length-1],dd=DIRS[a.d];let x=h[0]+dd.x,y=h[1]+dd.y;while(inB(x,y,lv.cols,lv.rows)&&g.occ.get(y*lv.cols+x)!==bl){x+=dd.x;y+=dd.y}
+      const ray=mk('path','rayh');ray.setAttribute('d',`M${px(h)} L${px([x,y])}`);e.gr.parentNode.appendChild(ray);
+      setTimeout(()=>{e.gr.classList.remove('shake');be.gr.classList.remove('blk');ray.remove()},450);
+      if(navigator.vibrate)navigator.vibrate(30);drawMeter();if(g.mistakes>=g.max){g.locked=true;g.tEnd=Date.now();$('#hint').innerHTML='<b style="color:var(--bad)">Blocked.</b> Another path sits in this arrow’s way, so your life is lost.';setTimeout(()=>finish(false),1300)}return}
+    e.busy=true;e.hit.style.display='none';a.cells.forEach(k=>g.occ.delete(k));g.left--;drawMeter();slide(a,e)}
+  function slide(a,e){ // whole path travels along its own shape, then straight out of the board
+    const gg=g,lv=gg.lv,P=a.pts.map(px),body=plen(P),h=a.pts[a.pts.length-1],dd=DIRS[a.d];
+    let rl=0,x=h[0]+dd.x,y=h[1]+dd.y;while(inB(x,y,lv.cols,lv.rows)){rl++;x+=dd.x;y+=dd.y}
+    const exL=(rl+2)*U+body,E=P[P.length-1],ext=P.concat([[E[0]+dd.x*exL,E[1]+dd.y*exL]]);
+    const dur=(300+exL*.55)*(matchMedia('(prefers-reduced-motion:reduce)').matches?.2:1),t0=performance.now();gg.anim++;
+    const step=now=>{const t=Math.min(1,(now-t0)/dur),s=exL*t*t,w=sub(ext,s,s+body);
+      if(t>=1||w.length<2||g!==gg){e.gr.remove();gg.anim--;if(g===gg&&gg.left===0&&!gg.anim)finish(true);return}
+      e.ln.setAttribute('d',smoothD(w,5));e.hd.setAttribute('points',headPts(w));requestAnimationFrame(step)};
+    requestAnimationFrame(step)}
+
+  async function finish(won,abandoned){
+    if(g.ended)return;g.ended=true;clearInterval(timer);const ms=elapsed(),gg=g;
+    let ok=true;try{const r=await store().finish(gg.id,{won,abandoned:!!abandoned,ms,mistakes:gg.mistakes,moves:gg.moves});ok=r.ok}catch(e){ok=false}
+    await refresh();if(won&&ok)confetti();
+    const ov=document.createElement('div');ov.className='ov';root.appendChild(ov);
+    const tot=gg.lv.arrows.length,cleared=tot-gg.left;
+    const render=()=>{const e=elig();
+      const msg=won?(ok?(st.gate?`Level ${gg.level} cleared. Collect your ${C.reward.total} VYRO COIN reward to continue.`:`Level ${gg.level} cleared and the reward is collected.`)
+        :'Cleared, but the result couldn’t be saved. Check your connection, then return to the menu.'):(abandoned?'You gave up this run.':'You tapped a blocked path and lost your only life.');
+      const act=!ok?'':st.gate?gatePanel():e.ok?`<button class="btn" id="a1">${won?(gg.level<100?'Next level':'Play again'):`Retry Level ${gg.level}`}</button>`:waitHTML(e);
+      ov.innerHTML=`<div class="card ${won?'win':'lose'}"><h2>${won?'Puzzle cleared':'Game Over'}</h2><p>${msg}</p>
+        <div class="stats"><div><b>${gg.level}/100</b>level</div><div><b>${won?fmt(ms).slice(3):cleared+'/'+tot}</b>${won?'time':'paths cleared'}</div><div><b>${Math.max(0,st.max-st.used)}/${st.max}</b>attempts left</div></div>
+        ${act}<button class="ghost" id="a2">Back to menu</button></div>`;
+      wireGate(ov,render);runCd(ov,async()=>{await refresh();render()});
+      const a1=$('#a1',ov);if(a1)a1.onclick=()=>{ov.remove();clearInterval(cd);sel=won&&gg.level<100?gg.level+1:gg.level;page=-1;begin(sel)};
+      $('#a2',ov).onclick=()=>{clearInterval(cd);if(won&&gg.level<100)sel=gg.level+1;page=-1;menu()}};
+    render()}
+
+  function pause(){if(!g||g.ended)return;g.paused=true;g.pausedAt=Date.now();
+    const ov=document.createElement('div');ov.className='ov';
+    ov.innerHTML='<div class="card"><h2>Paused</h2><p>The board is hidden while paused.</p><button class="btn" id="r">Resume</button></div>';root.appendChild(ov);
+    $('#r',ov).onclick=()=>{g.t0+=Date.now()-g.pausedAt;g.paused=false;ov.remove()}}
+  function restart(){if(!g||g.ended)return;g.paused=true;g.pausedAt=Date.now();
+    const ov=document.createElement('div');ov.className='ov';
+    ov.innerHTML=`<div class="card"><h2>Give up this run?</h2><p>This attempt counts as failed. To retry you’ll need to watch a rewarded ad, and the retry still needs a free daily attempt and the 1-hour cooldown.</p>
+      <button class="btn" id="y">Give up</button><button class="ghost" id="n">Keep playing</button></div>`;root.appendChild(ov);
+    $('#n',ov).onclick=()=>{g.t0+=Date.now()-g.pausedAt;g.paused=false;ov.remove()};
+    $('#y',ov).onclick=()=>{ov.remove();g.paused=false;finish(false,true)}}
+  function confetti(){const cols=['#b074ff','#ff6fb5','#46e0a8','#f3eefc'];
+    for(let i=0;i<46;i++){const c=document.createElement('i');c.className='cf';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%4];
+      c.style.setProperty('--dx',(Math.random()*160-80)+'px');c.style.setProperty('--r',(Math.random()*720)+'deg');c.style.animationDelay=Math.random()*.4+'s';
+      root.appendChild(c);setTimeout(()=>c.remove(),2600)}}
+
+  window.addEventListener('error',()=>{});
+  menu();
+}
+
+/* Self test: VyrovaArrowPuzzle.selfTest() validates all 10 levels in the console. */
+function selfTest(){return Array.from({length:100},(_,i)=>{const n=i+1,l=buildLevel(n),s=solve(l.arrows,l.cols,l.rows),
+  rp=replay(n,s.order);return{level:n,grid:l.cols+'x'+l.rows,arrows:l.arrows.length,depth:l.rounds,solvable:s.ok,replayOK:rp.cleared&&rp.mistakes===0}})}
+
+window.VyrovaArrowPuzzle={mount,selfTest,engine:{buildLevel,solve,replay,blockerOf,gen,LEVELS_DEF}};
+if(typeof module!=='undefined')module.exports=window.VyrovaArrowPuzzle;
+if(typeof document!=='undefined'){mount(document.getElementById('vyrova-arrow-root'))}
+</script>
+</body>
+</html>
